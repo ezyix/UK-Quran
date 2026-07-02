@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraAcademy // Premium Education Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(226, 232, 240, 0.8); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="text-slate-900 min-h-screen relative overflow-x-hidden antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- BACKGROUND GLOWS -->
+  <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-200/40 to-purple-200/30 blur-[120px] pointer-events-none z-0"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-sky-200/30 to-emerald-200/20 blur-[100px] pointer-events-none z-0"></div>
+
+  <!-- CONTAINER -->
+  <main class="relative z-10 w-full min-h-screen flex flex-col justify-between">
+
+    <!-- ========================================== -->
+    <!-- VIEWS CONTAINER                            -->
+    <!-- ========================================== -->
+    <div class="w-full flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8">
+
+      <!-- 1. LOGIN SCREEN -->
+      <section id="login-view" class="w-full max-w-md glass rounded-3xl p-8 shadow-xl shadow-slate-200/50 transition-all duration-300">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600 text-white font-bold text-xl shadow-lg shadow-indigo-200 mb-4">Ω</div>
+          <h1 class="text-2xl font-bold tracking-tight text-slate-900">AuraAcademy</h1>
+          <p class="text-slate-500 text-sm mt-1">Institutional Portal & Family Terminal</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl mb-6">
+          <button id="tab-teacher" type="button" onclick="switchLoginTab('teacher')" class="py-2 text-sm font-semibold rounded-lg transition-all text-indigo-600 bg-white shadow-sm">Teacher Login</button>
+          <button id="tab-parent" type="button" onclick="switchLoginTab('parent')" class="py-2 text-sm font-medium rounded-lg transition-all text-slate-600 hover:text-slate-900">Parent Base</button>
+        </div>
+
+        <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1.5">User Identity</label>
+            <input type="text" id="input-username" required class="w-full bg-white/70 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="Enter identity label...">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1.5">Security Code</label>
+            <input type="password" id="input-password" required class="w-full bg-white/70 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="••••••••">
+          </div>
+          <div class="text-xs text-slate-400 bg-slate-50 border border-slate-100 rounded-lg p-2.5 space-y-0.5">
+            <span class="font-semibold text-slate-500 block">Demo Passwords:</span>
+            <p>• Teacher: Use <code class="bg-white px-1 border rounded text-indigo-600">admin</code> / <code class="bg-white px-1 border rounded text-indigo-600">admin</code></p>
+            <p>• Parent: Use <code class="bg-white px-1 border rounded text-indigo-600">alex2026</code> / <code class="bg-white px-1 border rounded text-indigo-600">pass123</code></p>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/10 active:scale-[0.98] transition-all text-sm mt-2">Access Portal Dashboard</button>
+        </form>
+      </section>
+
+      <!-- 2. MAIN CORE CORE DASHBOARD -->
+      <section id="dashboard-view" class="hidden w-full max-w-6xl glass rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-200/60 overflow-hidden flex flex-col transition-all duration-300">
+        
+        <!-- DASHBOARD HEADER -->
+        <header class="border-b border-slate-200/80 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white/40">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-200">Ω</div>
+            <div>
+              <h2 id="dashboard-title" class="text-lg font-bold text-slate-900">Faculty Management Terminal</h2>
+              <p id="dashboard-subtitle" class="text-xs font-medium text-slate-500 mt-0.5">Active Session: Principal Class Lead</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-3 py-1.5 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              Date Vector: <span id="current-date-badge">July 1, 2026</span>
+            </div>
+            <button id="btn-next-day" onclick="simulateNextDay()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 px-3 rounded-xl transition-all shadow-sm flex items-center gap-1.5">
+              Simulate Next Day →
+            </button>
+            <button onclick="logout()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2 px-3 rounded-xl transition-all shadow-sm">Disconnect</button>
+          </div>
+        </header>
+
+        <!-- SUB HEADER ACTIONS -->
+        <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Enrolled Academic Profiles</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Select a ledger target profile row to execute operations</p>
+          </div>
+          <button id="btn-add-student-trigger" onclick="openAddStudentModal()" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-md shadow-indigo-600/10 transition-all active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+            Provision Student Profile
+          </button>
+        </div>
+
+        <!-- MAIN DATA TABLE -->
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                <th class="py-4 px-6">Student Identity Node</th>
+                <th class="py-4 px-6 text-center">Daily Evaluation Status</th>
+                <th class="py-4 px-6">Attendance Record</th>
+                <th class="py-4 px-6">Current Lesson Arc</th>
+                <th class="py-4 px-6">Prior Review Topic</th>
+                <th class="py-4 px-6 text-center">Score Vector</th>
+                <th class="py-4 px-6 text-right">Historical Metric logs</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body" class="divide-y divide-slate-200/60 text-sm">
+              <!-- Rendered Dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- FOOTER SIGNATURE -->
+    <footer class="w-full text-center py-4 border-t border-slate-200/40 text-xs text-slate-400 font-medium">
+      AuraAcademy Framework System v4.9.26 // Secure Protocol
+    </footer>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL COMPONENT WINDOWS                    -->
+  <!-- ========================================== -->
+
+  <!-- MODAL A: TEACHER DISPATCH & GRADING CONTROL -->
+  <div id="modal-manage" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md transition-all">
+    <div class="w-full max-w-xl glass rounded-3xl shadow-2xl overflow-hidden transform transition-all flex flex-col border border-white/40">
+      <div class="p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 id="modal-manage-title" class="text-base font-bold text-slate-900">Execute Daily Evaluation Card</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Records freeze directly into global immutable log upon submission</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-manage')" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-500 font-bold transition-all text-xl">×</button>
+      </div>
+      <form onsubmit="saveDailyRecord(event)" class="p-6 space-y-5">
+        <input type="hidden" id="modal-student-id">
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-2">1. Presence Ledger Validation</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" id="btn-att-present" onclick="selectAttendance(true)" class="py-3 px-4 rounded-xl border-2 text-sm font-semibold transition-all flex items-center justify-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Verified Present
+            </button>
+            <button type="button" id="btn-att-absent" onclick="selectAttendance(false)" class="py-3 px-4 rounded-xl border-2 text-sm font-semibold transition-all flex items-center justify-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Confirmed Absent
+            </button>
+          </div>
+          <input type="hidden" id="modal-attendance" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">2. Target Lesson Arc</label>
+            <input type="text" id="modal-new-lesson" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="e.g., Matrix Calculus Intro">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">3. Prior Evaluation Arc</label>
+            <input type="text" id="modal-old-lesson" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="e.g., Vector Optimization">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">4. Performance Score Vector</label>
+          <select id="modal-grade" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
+            <option value="">Choose Score Alpha Metric...</option>
+            <option value="A+">Alpha Plus [A+]</option>
+            <option value="A">Alpha [A]</option>
+            <option value="B">Beta [B]</option>
+            <option value="C">Gamma [C]</option>
+            <option value="D">Delta [D]</option>
+            <option value="F">Epsilon/Fail [F]</option>
+          </select>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeModal('modal-manage')" class="px-4 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-800 transition-all">Abort Assessment</button>
+          <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-md">Commit Daily Metric Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL B: PROVISION NEW STUDENT PROFILE -->
+  <div id="modal-add-student" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md transition-all">
+    <div class="w-full max-w-md glass rounded-3xl shadow-2xl overflow-hidden transform transition-all flex flex-col border border-white/40">
+      <div class="p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Provision Student Profile</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Creates dedicated, secure terminal credentials for parent routing</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-add-student')" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-500 font-bold transition-all text-xl">×</button>
+      </div>
+      <form onsubmit="handleAddStudent(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Full Name Passport</label>
+          <input type="text" id="add-fullname" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="e.g., Liam Sterling">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Parent Terminal Username</label>
+          <input type="text" id="add-username" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="e.g., sterlingfamily">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Terminal Secure Password</label>
+          <input type="password" id="add-password" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="••••••••">
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeModal('modal-add-student')" class="px-4 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-800 transition-all">Cancel Generation</button>
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-md">Instantiate Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL C: ANALYTICS CHRONOLOGY HISTORY REPORT -->
+  <div id="modal-report" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md transition-all">
+    <div class="w-full max-w-3xl glass rounded-3xl shadow-2xl overflow-hidden transform transition-all flex flex-col border border-white/40 max-h-[85vh]">
+      <div class="p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 id="modal-report-title" class="text-base font-bold text-slate-900">Historical Metric Analytics</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Chronological rolling history vector profile records</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-report')" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-500 font-bold transition-all text-xl">×</button>
+      </div>
+      <div class="p-6 overflow-y-auto no-scrollbar space-y-6">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-2xl text-center">
+            <span class="text-xs font-bold text-slate-500 tracking-wide uppercase block">Presence Rate</span>
+            <span id="report-stat-attendance" class="text-2xl font-bold text-indigo-600 inline-block mt-1">0%</span>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-2xl text-center">
+            <span class="text-xs font-bold text-slate-500 tracking-wide uppercase block">Total Sessions</span>
+            <span id="report-stat-total" class="text-2xl font-bold text-slate-800 inline-block mt-1">0</span>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-2xl text-center">
+            <span class="text-xs font-bold text-slate-500 tracking-wide uppercase block">Dominant Score</span>
+            <span id="report-stat-grade" class="text-2xl font-bold text-emerald-600 inline-block mt-1">N/A</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Chronological Log Matrix Table</h4>
+          <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-white/50">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Timeline Index</th>
+                  <th class="py-3 px-4">Ledger State</th>
+                  <th class="py-3 px-4">Lesson Module</th>
+                  <th class="py-3 px-4">Prior Review Block</th>
+                  <th class="py-3 px-4 text-center">Score Vector</th>
+                </tr>
+              </thead>
+              <tbody id="modal-report-table-body" class="divide-y divide-slate-100">
+                <!-- Log instances dynamically added -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT ARCHITECTURE EMULATION CODE    -->
+  <!-- ========================================== -->
+  <script>
+    // CORE SYSTEM DATA SEED SETUP
+    let currentRole = 'teacher'; 
+    let authenticatedUser = null; 
+    let baselineSimulationDate = new Date(2026, 6, 1); 
+
+    let globalStudentRegistry = [
+      {
+        id: "stu-1",
+        name: "Alex Vance",
+        parentUser: "alex2026",
+        parentPass: "pass123",
+        dailyRecord: { managed: true, attendance: "Present", newLesson: "Advanced UI Composition & Token Theory", oldLesson: "CSS Flexbox Foundations & Box Models", grade: "A+" },
+        history: [
+          { date: "Jun 28, 2026", attendance: "Present", newLesson: "Asynchronous JavaScript Promises", oldLesson: "Callback Arrays", grade: "A" },
+          { date: "Jun 29, 2026", attendance: "Present", newLesson: "DOM State Architecture Design", oldLesson: "Asynchronous JavaScript Promises", grade: "A+" },
+          { date: "Jun 30, 2026", attendance: "Absent", newLesson: "Emergency Outage Leave Window", oldLesson: "DOM State Architecture Design", grade: "C" }
+        ]
+      },
+      {
+        id: "stu-2",
+        name: "Marcus Aurelius",
+        parentUser: "marcus2026",
+        parentPass: "rome123",
+        dailyRecord: { managed: false, attendance: "", newLesson: "", oldLesson: "", grade: "" },
+        history: [
+          { date: "Jun 29, 2026", attendance: "Present", newLesson: "Stoic Ethics Seminar Framework", oldLesson: "Meditation Logs", grade: "A" },
+          { date: "Jun 30, 2026", attendance: "Present", newLesson: "Roman Defense Policy Structures", oldLesson: "Stoic Ethics Seminar Framework", grade: "B" }
+        ]
+      },
+      {
+        id: "stu-3",
+        name: "Seraphina Locke",
+        parentUser: "seraphina2026",
+        parentPass: "locke123",
+        dailyRecord: { managed: true, attendance: "Absent", newLesson: "Excused Absence Medical Block", oldLesson: "Epistemology Fundamentals Core", grade: "F" },
+        history: [
+          { date: "Jun 29, 2026", attendance: "Present", newLesson: "Empiricism Arguments Structure", oldLesson: "Intro Philosophy Theory", grade: "A" },
+          { date: "Jun 30, 2026", attendance: "Present", newLesson: "Epistemology Fundamentals Core", oldLesson: "Empiricism Arguments Structure", grade: "A" }
+        ]
+      }
+    ];
+
+    // ROUTING RENDERING ENGINE CONTROL
+    function formatSystemDate(d) {
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    function updateDateBadges() {
+      document.getElementById('current-date-badge').innerText = formatSystemDate(baselineSimulationDate);
+    }
+
+    function switchLoginTab(role) {
+      currentRole = role;
+      const tBtn = document.getElementById('tab-teacher');
+      const pBtn = document.getElementById('tab-parent');
+      
+      if (role === 'teacher') {
+        tBtn.className = "py-2 text-sm font-semibold rounded-lg transition-all text-indigo-600 bg-white shadow-sm";
+        pBtn.className = "py-2 text-sm font-medium rounded-lg transition-all text-slate-600 hover:text-slate-900";
+        document.getElementById('input-username').placeholder = "Enter identity label...";
+      } else {
+        pBtn.className = "py-2 text-sm font-semibold rounded-lg transition-all text-indigo-600 bg-white shadow-sm";
+        tBtn.className = "py-2 text-sm font-medium rounded-lg transition-all text-slate-600 hover:text-slate-900";
+        document.getElementById('input-username').placeholder = "Enter student unique key...";
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const userVal = document.getElementById('input-username').value.trim();
+      const passVal = document.getElementById('input-password').value;
+
+      if (currentRole === 'teacher') {
+        if (userVal.toLowerCase() === 'admin' && passVal === 'admin') {
+          authenticatedUser = { role: 'teacher', name: 'Principal Class Lead' };
+          bootstrapDashboard();
+        } else {
+          alert('Invalid Authentication Parameters. Try using admin / admin credentials.');
+        }
+      } else {
+        const targetStudent = globalStudentRegistry.find(s => s.parentUser === userVal && s.parentPass === passVal);
+        if (targetStudent) {
+          authenticatedUser = { role: 'parent', targetStudentId: targetStudent.id, name: `Parent Node of ${targetStudent.name}` };
+          bootstrapDashboard();
+        } else {
+          alert('No parent link matched with those security parameters.');
+        }
+      }
+    }
+
+    function bootstrapDashboard() {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+      updateDateBadges();
+
+      const titleNode = document.getElementById('dashboard-title');
+      const subtitleNode = document.getElementById('dashboard-subtitle');
+      const actionBtn = document.getElementById('btn-add-student-trigger');
+      const simulationBtn = document.getElementById('btn-next-day');
+
+      if (authenticatedUser.role === 'teacher') {
+        titleNode.innerText = "Faculty Management Terminal";
+        subtitleNode.innerText = `Active Session: ${authenticatedUser.name}`;
+        actionBtn.classList.remove('hidden');
+        simulationBtn.classList.remove('hidden');
+      } else {
+        titleNode.innerText = "Parent Viewing Terminal (Read-Only Mode)";
+        const linkedStudent = globalStudentRegistry.find(s => s.id === authenticatedUser.targetStudentId);
+        subtitleNode.innerText = `Access Pipeline Linked Target: ${linkedStudent.name}`;
+        actionBtn.classList.add('hidden');
+        simulationBtn.classList.add('hidden');
+      }
+      renderStudentGrid();
+    }
+
+    function logout() {
+      authenticatedUser = null;
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('hidden');
+      document.getElementById('login-form').reset();
+    }
+
+    // LIST VIEW INJECTOR
+    function renderStudentGrid() {
+      const container = document.getElementById('student-table-body');
+      container.innerHTML = '';
+
+      globalStudentRegistry.forEach(student => {
+        if (authenticatedUser.role === 'parent' && student.id !== authenticatedUser.targetStudentId) {
+          return;
+        }
+
+        const isManaged = student.dailyRecord.managed;
+        const row = document.createElement('tr');
+        
+        let rowClassStr = "hover:bg-slate-50/80 transition-all ";
+        if (authenticatedUser.role === 'teacher') {
+          rowClassStr += isManaged ? "opacity-75 bg-slate-50/40" : "cursor-pointer group";
+          row.setAttribute('onclick', isManaged ? `alert('Locked Vector. Daily operations for ${student.name} are completed and closed.')` : `openManageModal('${student.id}')`);
+        }
+        row.className = rowClassStr;
+
+        row.innerHTML = `
+          <td class="py-4 px-6 font-medium text-slate-900">
+            <div class="flex items-center gap-2">
+              <span class="text-base text-indigo-500 font-bold group-hover:scale-110 transition-transform">✦</span>
+              <div>
+                <p class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">${student.name}</p>
+                <p class="text-slate-400 text-xs font-mono">ID: ${student.id} // User: ${student.parentUser}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-6 text-center">
+            ${isManaged 
+              ? `<span class="inline-flex items-center gap-1 bg-slate-200 text-slate-700 text-xs px-2.5 py-1 rounded-full font-bold">
+                   <svg class="w-3 h-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg> Committed
+                 </span>` 
+              : `<span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-bold animate-pulse">Pending Input</span>`
+            }
+          </td>
+          <td class="py-4 px-6">
+            ${isManaged 
+              ? (student.dailyRecord.attendance === 'Present' 
+                  ? '<span class="text-emerald-600 font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Present</span>' 
+                  : '<span class="text-rose-600 font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Absent</span>')
+              : '<span class="text-slate-400 font-normal italic">No Data Ledger</span>'
+            }
+          </td>
+          <td class="py-4 px-6 max-w-[200px] truncate font-medium text-slate-700">
+            ${isManaged ? student.dailyRecord.newLesson : '<span class="text-slate-400 font-normal italic">Awaiting dispatch</span>'}
+          </td>
+          <td class="py-4 px-6 max-w-[200px] truncate text-slate-600">
+            ${isManaged ? student.dailyRecord.oldLesson : '<span class="text-slate-400 font-normal italic">Awaiting review</span>'}
+          </td>
+          <td class="py-4 px-6 text-center font-bold text-base ${isManaged ? 'text-indigo-600' : 'text-slate-300'}">
+            ${isManaged ? student.dailyRecord.grade : '—'}
+          </td>
+          <td class="py-4 px-6 text-right" onclick="event.stopPropagation();">
+            <div class="flex items-center justify-end gap-2">
+              <button onclick="openReportModal('${student.id}')" class="bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 shadow-sm text-xs font-bold py-1.5 px-3.5 rounded-xl transition-all active:scale-95">
+                Analytics Log
+              </button>
+              ${authenticatedUser.role === 'teacher' ? `<button onclick="deleteStudent('${student.id}', '${student.name.replace(/'/g, "\\'")}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 shadow-sm text-xs font-bold py-1.5 px-3.5 rounded-xl transition-all active:scale-95">
+                Delete
+              </button>` : ''}
+            </div>
+          </td>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // MODAL CONTROL INTERACTION
+    function openManageModal(id) {
+      if (authenticatedUser.role !== 'teacher') return;
+      const student = globalStudentRegistry.find(s => s.id === id);
+      if (!student || student.dailyRecord.managed) return;
+
+      document.getElementById('modal-student-id').value = id;
+      document.getElementById('modal-manage-title').innerText = `Daily Evaluation Card: ${student.name}`;
+      
+      document.getElementById('modal-attendance').value = '';
+      document.getElementById('modal-new-lesson').value = '';
+      document.getElementById('modal-old-lesson').value = '';
+      document.getElementById('modal-grade').value = '';
+
+      const pBtn = document.getElementById('btn-att-present');
+      const aBtn = document.getElementById('btn-att-absent');
+      pBtn.className = "py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-700 text-sm font-semibold transition-all hover:bg-slate-50 flex items-center justify-center gap-2";
+      aBtn.className = "py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-700 text-sm font-semibold transition-all hover:bg-slate-50 flex items-center justify-center gap-2";
+
+      showModal('modal-manage');
+    }
+
+    function selectAttendance(isPresent) {
+      document.getElementById('modal-attendance').value = isPresent ? "Present" : "Absent";
+      const pBtn = document.getElementById('btn-att-present');
+      const aBtn = document.getElementById('btn-att-absent');
+
+      if (isPresent) {
+        pBtn.className = "py-3 px-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm shadow-emerald-100";
+        aBtn.className = "py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-400 text-sm font-semibold transition-all flex items-center justify-center gap-2 opacity-50";
+      } else {
+        aBtn.className = "py-3 px-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm shadow-rose-100";
+        pBtn.className = "py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-400 text-sm font-semibold transition-all flex items-center justify-center gap-2 opacity-50";
+      }
+    }
+
+    function saveDailyRecord(e) {
+      e.preventDefault();
+      const id = document.getElementById('modal-student-id').value;
+      const att = document.getElementById('modal-attendance').value;
+      const nw = document.getElementById('modal-new-lesson').value.trim();
+      const od = document.getElementById('modal-old-lesson').value.trim();
+      const gr = document.getElementById('modal-grade').value;
+
+      if (!att) {
+        alert("Verification Error: Please validate the student presence status ledger before submission.");
+        return;
+      }
+
+      const student = globalStudentRegistry.find(s => s.id === id);
+      if (student) {
+        student.dailyRecord = { managed: true, attendance: att, newLesson: nw, oldLesson: od, grade: gr };
+        closeModal('modal-manage');
+        renderStudentGrid();
+      }
+    }
+
+    function deleteStudent(id, name) {
+      if (authenticatedUser?.role !== 'teacher') return;
+      const confirmed = confirm(`Remove ${name} from the student registry?`);
+      if (!confirmed) return;
+
+      globalStudentRegistry = globalStudentRegistry.filter(student => student.id !== id);
+      renderStudentGrid();
+    }
+
+    function openAddStudentModal() {
+      if (authenticatedUser.role !== 'teacher') return;
+      document.getElementById('add-fullname').value = '';
+      document.getElementById('add-username').value = '';
+      document.getElementById('add-password').value = '';
+      showModal('modal-add-student');
+    }
+
+    function handleAddStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById('add-fullname').value.trim();
+      const user = document.getElementById('add-username').value.trim();
+      const pass = document.getElementById('add-password').value;
+
+      if (globalStudentRegistry.some(s => s.parentUser.toLowerCase() === user.toLowerCase())) {
+        alert("System Conflict Exception: This configuration identifier username is already registered.");
+        return;
+      }
+
+      const nextId = `stu-${globalStudentRegistry.length + 1}`;
+      globalStudentRegistry.push({
+        id: nextId,
+        name: name,
+        parentUser: user,
+        parentPass: pass,
+        dailyRecord: { managed: false, attendance: "", newLesson: "", oldLesson: "", grade: "" },
+        history: []
+      });
+
+      closeModal('modal-add-student');
+      renderStudentGrid();
+    }
+
+    function openReportModal(id) {
+      const student = globalStudentRegistry.find(s => s.id === id);
+      if (!student) return;
+
+      document.getElementById('modal-report-title').innerText = `Historical Analytical Ledger // ${student.name}`;
+      
+      let combinedLogs = [...student.history];
+      if (student.dailyRecord.managed) {
+        combinedLogs.unshift({
+          date: formatSystemDate(baselineSimulationDate),
+          attendance: student.dailyRecord.attendance,
+          newLesson: student.dailyRecord.newLesson,
+          oldLesson: student.dailyRecord.oldLesson,
+          grade: student.dailyRecord.grade
+        });
+      }
+
+      const tBody = document.getElementById('modal-report-table-body');
+      tBody.innerHTML = '';
+
+      if (combinedLogs.length === 0) {
+        tBody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 italic">No historical timeline events recorded in the database.</td></tr>`;
+        document.getElementById('report-stat-attendance').innerText = "0%";
+        document.getElementById('report-stat-total').innerText = "0";
+        document.getElementById('report-stat-grade').innerText = "N/A";
+      } else {
+        let presentCount = 0;
+        let gradeMap = {};
+
+        combinedLogs.forEach(log => {
+          if (log.attendance === "Present") presentCount++;
+          if (log.grade && log.grade !== "—") {
+            gradeMap[log.grade] = (gradeMap[log.grade] || 0) + 1;
+          }
+
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition-colors";
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-semibold text-slate-700">${log.date}</td>
+            <td class="py-3 px-4">
+              ${log.attendance === 'Present' 
+                ? '<span class="text-emerald-600 font-bold">Present</span>' 
+                : '<span class="text-rose-600 font-bold">Absent</span>'}
+            </td>
+            <td class="py-3 px-4 font-medium text-slate-600 max-w-[180px] truncate">${log.newLesson}</td>
+            <td class="py-3 px-4 text-slate-500 max-w-[180px] truncate">${log.oldLesson}</td>
+            <td class="py-3 px-4 text-center font-bold text-slate-900">${log.grade || '—'}</td>
+          `;
+          tBody.appendChild(tr);
+        });
+
+        const attPercentage = Math.round((presentCount / combinedLogs.length) * 100);
+        document.getElementById('report-stat-attendance').innerText = `${attPercentage}%`;
+        document.getElementById('report-stat-total').innerText = combinedLogs.length;
+        
+        let topGrade = "N/A";
+        let maxCount = 0;
+        for (const [gr, count] of Object.entries(gradeMap)) {
+          if (count > maxCount) { maxCount = count; topGrade = gr; }
+        }
+        document.getElementById('report-stat-grade').innerText = topGrade;
+      }
+
+      showModal('modal-report');
+    }
+
+    function simulateNextDay() {
+      if (confirm("Execute Calendar Step Simulation Reset? This moves the internal app calendar forward by 24 hours, moves pending evaluations to history logs, and unlocks clean daily fields for the next entries.")) {
+        
+        globalStudentRegistry.forEach(student => {
+          if (student.dailyRecord.managed) {
+            student.history.unshift({
+              date: formatSystemDate(baselineSimulationDate),
+              attendance: student.dailyRecord.attendance,
+              newLesson: student.dailyRecord.newLesson,
+              oldLesson: student.dailyRecord.oldLesson,
+              grade: student.dailyRecord.grade
+            });
+          }
+          student.dailyRecord = { managed: false, attendance: "", newLesson: "", oldLesson: "", grade: "" };
+        });
+
+        baselineSimulationDate.setDate(baselineSimulationDate.getDate() + 1);
+        updateDateBadges();
+        renderStudentGrid();
+      }
+    }
+
+    // DOM HELPER VISIBILITY MODULES
+    function showModal(id) {
+      const target = document.getElementById(id);
+      target.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const target = document.getElementById(id);
+      target.classList.add('hidden');
+      renderStudentGrid();
+    }
+  </script>
+</body>
+</html>
