@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Quran LMS - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo Header -->
+        <div class="header">
+            <div class="logo">📘</div>
+            <h1>UK Quran</h1>
+            <p>Learning Management System</p>
+        </div>
+
+        <!-- Role Toggle -->
+        <div class="role-toggle">
+            <button id="btn-student" class="active">👤 Student</button>
+            <button id="btn-teacher">🎓 Teacher</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form">
+            <!-- Dynamic Labels based on Role -->
+            <label id="lbl-id">Student ID</label>
+            <input type="text" id="input-id" placeholder="name-123" required>
+
+            <label id="lbl-password">PIN</label>
+            <input type="password" id="input-password" placeholder="••••" required>
+
+            <button type="submit" class="btn-primary">Login ➔</button>
+        </form>
+
+        <div class="footer">
+            <p>© 2026 UK QURAN • PRIVACY & TERMS</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Firebase SDK (Modular V10) -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

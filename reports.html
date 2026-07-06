@@ -1,0 +1,122 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monthly Reports</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="dash-header">
+            <button class="icon-btn" id="btn-back" title="Go Back">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8E785C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <h2 style="margin:0; font-size:18px; color: #5C4B37;">Monthly Reports</h2>
+            <div class="avatar" style="width:40px; height:40px;">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="white"/>
+                </svg>
+            </div>
+        </header>
+
+        <!-- Summary Statistics -->
+        <div class="reports-summary">
+            <div class="full-width-card">
+                <div class="flex-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Total Students</span>
+                </div>
+                <h2 id="report-total-students">0</h2>
+            </div>
+            <div class="half-card-blue">
+                <span>Avg Grade</span>
+                <p id="report-avg-grade">...</p>
+            </div>
+            <div class="half-card-green">
+                <span>Avg Presence</span>
+                <p id="report-avg-presence">0%</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="reports-filters">
+            <div class="filter-group">
+                <label>Month</label>
+                <select id="filter-month">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07" selected>July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Year</label>
+                <select id="filter-year">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                </select>
+            </div>
+        </div>
+        <br>
+        <!-- Data Table (Scrollable) -->
+        <div class="table-container">
+            <table class="excel-table">
+                <thead>
+                    <tr>
+                        <th colspan="6" class="th-orange" id="table-title">Month of July 2026</th>
+                    </tr>
+                    <tr>
+                        <th class="th-blue sticky-col">Name</th>
+                        <th class="th-blue">New<br>(NW)</th>
+                        <th class="th-blue">Revision<br>(M)</th>
+                        <th class="th-blue">Present<br>(A)</th>
+                        <th class="th-blue">Absent<br>(AB)</th>
+                        <th class="th-blue">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="report-table-body">
+                    <!-- Javascript will inject rows here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Download Button -->
+        <div class="save-container">
+            <button class="btn-primary full-width" id="btn-download-pdf">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span id="btn-download-label">Download PDF Report</span>
+            </button>
+        </div>
+            <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- jsPDF + AutoTable: builds a real vector PDF table (no screenshot/canvas slicing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script type="module" src="reports.js?v=3"></script>
+    </body>
+    </html>
