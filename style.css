@@ -1,0 +1,290 @@
+:root {
+    --primary-orange: #F29C38;
+    --bg-light: #F4F5F7;
+    --text-dark: #333333;
+    --text-muted: #888888;
+    --white: #FFFFFF;
+    
+    /* Badge / Pill variables */
+    --badge-bg: #FFFFFF;
+    --badge-border: rgba(16,24,40,0.06);
+    --badge-shadow: 0 2px 6px rgba(16,24,40,0.04);
+    --pill-label-color: #5C4B37;
+    --pill-count-bg: #F4F5F7;
+    --pill-count-color: #333333;
+    --pill-gap: 8px;
+}
+
+/* --- GLOBAL & LOGIN STYLES --- */
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background-color: #333333; /* Dark outside mobile frame */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.header h1 { color: var(--primary-orange); margin: 10px 0 5px; font-size: 24px; }
+.header p { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+.logo { font-size: 40px; background: #f0f0ff; width: 70px; height: 70px; line-height: 70px; border-radius: 50%; margin: 0 auto; }
+
+.role-toggle { display: flex; background: var(--bg-light); border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+.role-toggle button { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: 500; color: var(--text-muted); }
+.role-toggle button.active { background: var(--primary-orange); color: var(--white); border-radius: 8px; }
+
+form { display: flex; flex-direction: column; text-align: left; }
+label { font-size: 13px; color: var(--text-dark); margin-bottom: 5px; font-weight: 500; }
+input { padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background: var(--bg-light); font-family: inherit; }
+
+.btn-primary { background: var(--primary-orange); color: var(--white); border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.footer { margin-top: 25px; font-size: 12px; }
+.footer a { color: var(--primary-orange); text-decoration: none; font-weight: 500; }
+.footer p { color: var(--text-muted); margin-top: 20px; }
+
+/* --- APP LAYOUT (MOBILE FRAME) --- */
+.app-container {
+    width: 100%;
+    max-width: 414px; 
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+    padding-bottom: 100px; 
+    box-sizing: border-box;
+}
+
+/* --- DASHBOARD HEADER --- */
+.dash-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--white); border-bottom: 1px solid #eaeaea; }
+.user-info { display: flex; align-items: center; gap: 15px; }
+.user-info .avatar { font-size: 30px; background: var(--primary-orange); border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; }
+.user-info h2 { margin: 0; font-size: 16px; color: #5C4B37; font-weight: 600; }
+.user-info p { margin: 0; font-size: 11px; color: #8E785C; }
+.icon-btn { background: none; border: none; cursor: pointer; color: #8E785C; display: flex; justify-content: center; align-items: center; padding: 8px; border-radius: 50%; transition: background-color 0.2s; }
+.icon-btn:hover { background-color: rgba(142, 120, 92, 0.1); }
+
+/* --- TEACHER SUMMARY SECTION --- */
+.summary-section { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; padding: 20px; }
+.summary-card { background: #ECECEC; padding: 12px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 90px; box-sizing: border-box; }
+.summary-card.highlight-green { background: #82EE85; color: #004d40; }
+.summary-label { font-size: 10px; font-weight: 600; color: #888888; line-height: 1.2; }
+.summary-card.highlight-green .summary-label { color: #004d40; opacity: 0.8; }
+.summary-value { margin: 0; font-size: 26px; font-weight: bold; color: #333333; }
+.summary-card.highlight-green .summary-value { color: #004d40; }
+
+.action-buttons { display: flex; flex-direction: column; gap: 8px; justify-content: space-between; height: 90px; }
+.btn-light { background: #FFF3E0; border: none; font-weight: bold; color: #D88212; cursor: pointer; height: calc(50% - 4px); display: flex; justify-content: center; align-items: center; border-radius: 10px; font-size: 11px; font-family: inherit; box-sizing: border-box; }
+.btn-outline { background: white; border: 1px solid #146c43; color: #146c43; font-weight: bold; cursor: pointer; height: calc(50% - 4px); display: flex; justify-content: center; align-items: center; border-radius: 10px; font-size: 11px; font-family: inherit; box-sizing: border-box; transition: background 0.2s; }
+.btn-outline:hover { background: #f4f5f7; }
+
+/* --- STUDENT CARDS & TOGGLES --- */
+.student-list { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+.student-card { background: var(--white); border-radius: 12px; padding: 15px; border-left: 5px solid #2e7d32; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.student-card.absent { border-left: 5px solid var(--danger-red, #EA4335); }
+
+.sc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.sc-info { display: flex; align-items: center; gap: 10px; }
+.sc-info .av { background: #ffcc80; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold;}
+.sc-info h4 { margin: 0; font-size: 15px;}
+
+.toggle-p-a { display: flex; background: #f1f3f4; border-radius: 20px; overflow: hidden; }
+.toggle-p-a button { border: none; padding: 5px 12px; font-size: 12px; font-weight: bold; cursor: pointer; background: transparent; color: #aaa; }
+.toggle-p-a .active-p { background: #80e27e; color: #004d40; }
+.toggle-p-a .active-a { background: #ff8a80; color: #b71c1c; }
+
+.sc-bottom { display: flex; flex-direction: column; gap: 10px; }
+.remark-input { width: 100%; box-sizing: border-box; border: 1px solid #eaeaea; border-radius: 8px; padding: 8px; font-size: 12px; }
+
+/* --- COMPACT PILL BADGES --- */
+.badges { display: inline-flex; gap: var(--pill-gap); align-items: center; flex-wrap: wrap; }
+.pill-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--badge-bg); border: 1px solid var(--badge-border); box-shadow: var(--badge-shadow); padding: 6px 10px; border-radius: 999px; font-size: 12px; line-height: 1; color: var(--pill-label-color); }
+.pill-badge .pill-label { font-weight: 600; color: var(--pill-label-color); }
+.pill-badge .pill-count { display: inline-flex; min-width: 26px; height: 22px; padding: 0 6px; align-items: center; justify-content: center; background: var(--pill-count-bg); color: var(--pill-count-color); border-radius: 999px; font-weight: 700; font-size: 12px; box-shadow: none; border: 1px solid transparent; }
+.pill-badge[hidden], .pill-badge.hidden { display: none !important; }
+
+/* --- FIXED SAVE BUTTON --- */
+.save-container { position: fixed; bottom: 0; width: 100%; max-width: 414px; padding: 20px; box-sizing: border-box; background: linear-gradient(to top, var(--bg-light) 70%, transparent); z-index: 100; }
+.full-width { width: 100%; box-shadow: 0 4px 15px rgba(242, 156, 56, 0.4); }
+
+/* --- MODAL (POPUP) STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+.modal-overlay.hidden { display: none !important; }
+.modal-content { background: var(--white); padding: 24px; border-radius: 16px; width: 85%; max-width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.modal-content h3 { margin: 0 0 15px 0; color: #5C4B37; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.modal-actions button { flex: 1; padding: 12px; }
+.field-hint {
+    display: block;
+    margin: -8px 0 12px;
+    font-size: 11px;
+    color: #8E785C;
+}
+
+input.input-error {
+    border-color: #d88212;
+    background: #fff7ec;
+    box-shadow: 0 0 0 3px rgba(216, 130, 18, 0.12);
+}
+
+/* --- TOAST NOTIFICATIONS --- */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.toast {
+    background: #333;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: #137333;
+}
+
+.toast.error {
+    background: #b71c1c;
+}
+
+/* ========================================= */
+/* --- REPORTS PAGE STYLES (RESTORED) ---    */
+/* ========================================= */
+.reports-filters { display: flex; gap: 15px; padding: 20px 20px 10px; }
+.filter-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.filter-group label { font-size: 11px; color: #888; }
+.filter-group select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; font-size: 14px; background: white; }
+
+.reports-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 20px 10px; }
+.full-width-card { grid-column: span 2; background: #FFF3E0; padding: 15px 20px; border-radius: 12px; }
+.flex-title { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; font-weight: 600;}
+.full-width-card h2 { margin: 5px 0 0; color: #D88212; font-size: 24px; }
+
+.half-card-blue { background: #E8F0FE; padding: 15px; border-radius: 12px; }
+.half-card-blue span { font-size: 11px; color: #1967D2; }
+.half-card-blue p { margin: 5px 0 0; color: #1967D2; font-weight: bold; font-size: 16px;}
+
+.half-card-green { background: #E6F4EA; padding: 15px; border-radius: 12px; }
+.half-card-green span { font-size: 11px; color: #137333; }
+.half-card-green p { margin: 5px 0 0; color: #137333; font-weight: bold; font-size: 16px;}
+
+/* Table Styles & Sticky Fix */
+.table-container { padding: 0 20px; overflow-x: auto; margin-bottom: 120px; }
+.excel-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 500px; font-size: 12px; text-align: center; background: white; }
+.excel-table th, .excel-table td { border: 1px solid #ddd; padding: 10px 8px; }
+.excel-table .th-orange { background-color: var(--primary-orange); color: white; padding: 12px;}
+.excel-table .th-blue { background-color: #4A90E2; color: white; font-weight: 600; }
+.excel-table td { color: #333; }
+
+/* Keep Name column fixed while horizontally scrolling */
+.excel-table thead .sticky-col,
+.excel-table thead th:first-child {
+    position: relative;
+    left: 0;
+    z-index: 3;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.08);
+}
+
+.excel-table tbody .sticky-col,
+.excel-table tbody td:first-child {
+    position: relative;
+    left: 0;
+    z-index: 2;
+    background-color: #ffffff;
+    color: #333333;
+    font-weight: bold;
+    text-align: left;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+
+/* --- PRINT (PDF) STYLES --- */
+@media print {
+    .dash-header, .reports-filters, .save-container, .icon-btn { display: none !important; }
+    body, .app-container { background: white !important; box-shadow: none !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    .table-container { overflow: visible !important; margin-bottom: 0 !important; padding: 0 !important; }
+    .excel-table tr { page-break-inside: avoid; break-inside: avoid; }
+    @page { size: landscape; margin: 1cm; }
+}
+
+/* ============================================================
+   ADD THESE TO style.css (or replace the matching existing rules)
+   ============================================================ */
+
+/* --- Student card action row: P/A toggle + delete icon side by side --- */
+.sc-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(183, 28, 28, 0.25);
+    background: #fff5f5;
+    color: #b71c1c;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.icon-btn-delete:hover {
+    background: #ffe3e3;
+}
+
+/* --- Danger button for delete-confirm modal --- */
+.btn-danger {
+    background: #b71c1c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
