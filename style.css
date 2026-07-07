@@ -41,31 +41,34 @@ body::before {
 }
 
 .login-container {
-    position: fixed;
+    position: relative;
     z-index: 1;
     width: min(320px, 92%);
     border-radius: 28px;
     padding: 20px;
-    
+    margin: 24px auto;
     text-align: left;
-        /* Transparent Background */
-
-        background-image: url(download\ \(3\).png);
-        background-size: 100% 100%;
-
-
-    /* Border */
-
-    /* Shadow */
+    overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-
     color: white;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url(download\ \(3\).webp);
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px);
+    transform: scale(1.04);
+    z-index: -1;
 }
 
 .header {
     margin-bottom: 28px;
     text-align: center;
-    color: var(--white);
+    color: black;
 }
 
 .header h1 {
@@ -173,7 +176,7 @@ input:focus {
 .footer {
     margin-top: 24px;
     font-size: 0.87rem;
-    color: white;
+    color: black;
     text-align: center;
 }
 
