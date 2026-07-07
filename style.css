@@ -23,7 +23,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--white);
+    background-image:url(download\ \(3\).webp);
     background-position: center;
     position: relative;
 }
@@ -46,7 +46,7 @@ body::before {
     text-align: left;
         /* Transparent Background */
 
-        background-image: url(download\ \(3\).png);
+        background-image: url(download\ \(4\).webp);
         background-size: 100% 100%;
 
 
@@ -61,7 +61,7 @@ body::before {
 .header {
     margin-bottom: 28px;
     text-align: center;
-    color: var(--white);
+    color: white;
 }
 
 .header h1 {
