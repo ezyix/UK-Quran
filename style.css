@@ -16,61 +16,52 @@
 }
 
 /* --- GLOBAL & LOGIN STYLES --- */
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
 body {
+    margin: 0;
     font-family: 'Outfit', sans-serif;
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 24px;
+    align-items: center;
     background-color: var(--white);
     background-position: center;
     position: relative;
-    box-sizing: border-box;
 }
 
 body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: white;
+    background:white;
     z-index: 0;
 }
 
 .login-container {
-    position: relative;
+    position: fixed;
     z-index: 1;
-    width: min(420px, 100%);
+    width: min(320px, 92%);
     border-radius: 28px;
-    padding: 20px;
-    margin: 0 auto;
+    padding: 42px 36px;
+    
     text-align: left;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    color: white;
-}
+        /* Transparent Background */
 
-.login-container::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url(download\ \(3\).webp);
-    background-size: cover;
-    background-position: center;
-    filter: blur(4px);
-    transform: scale(1.04);
-    z-index: -1;
+        background-image: url(download\ \(3\).png);
+        background-size: 100% 100%;
+
+
+    /* Border */
+
+    /* Shadow */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    color: white;
 }
 
 .header {
     margin-bottom: 28px;
     text-align: center;
-    color: black;
+    color: var(--white);
 }
 
 .header h1 {
@@ -178,7 +169,7 @@ input:focus {
 .footer {
     margin-top: 24px;
     font-size: 0.87rem;
-    color: black;
+    color: white;
     text-align: center;
 }
 
