@@ -122,7 +122,10 @@ function renderStudents() {
             <div class="sc-top">
                 <div class="sc-info">
                     <div class="av">${userIconSVG}</div>
-                    <div><h4>${student.name}</h4></div>
+                    <div>
+                        <h4>${student.name}</h4>
+                        <p class="student-meta">ID: ${student.id} | PIN: ${student.pin}</p>
+                    </div>
                 </div>
                 <div class="sc-actions">
                     <div class="toggle-p-a">
