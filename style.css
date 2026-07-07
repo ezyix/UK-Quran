@@ -26,6 +26,7 @@ body {
     background-color: var(--white);
     background-position: center;
     position: relative;
+    padding-top: 10px;
 }
 
 body::before {
