@@ -23,27 +23,25 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background-size: 100% 2000px;
+    background-color: var(--white);
     background-position: center;
     position: relative;
-    color: #1e293b;
 }
 
 body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(8, 15, 34, 0.72);
+    background:white;
     z-index: 0;
 }
 
 .login-container {
-    position: relative;
+    position: fixed;
     z-index: 1;
     width: min(320px, 92%);
     border-radius: 28px;
-    padding: 42px 36px;
+    padding: 22px 36px;
     
     text-align: left;
         /* Transparent Background */
