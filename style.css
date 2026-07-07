@@ -26,27 +26,29 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 24px;
     background-color: var(--white);
     background-position: center;
     position: relative;
+    box-sizing: border-box;
 }
 
 body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background:white;
+    background: white;
     z-index: 0;
 }
 
 .login-container {
     position: relative;
     z-index: 1;
-    width: min(320px, 92%);
+    width: min(420px, 100%);
     border-radius: 28px;
     padding: 20px;
-    margin: 24px auto;
+    margin: 0 auto;
     text-align: left;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
