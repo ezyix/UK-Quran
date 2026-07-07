@@ -41,7 +41,7 @@ body::before {
     z-index: 1;
     width: min(320px, 92%);
     border-radius: 28px;
-    padding: 42px 36px;
+    padding: 12px 36px;
     
     text-align: left;
         /* Transparent Background */
