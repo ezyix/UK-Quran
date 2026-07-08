@@ -5,10 +5,12 @@ import { auth, database, secondaryAuth } from "./firebase-config.js";
 let currentTeacherUid = null;
 let students = [];
 let pendingDeleteId = null;
+let searchTerm = '';
 const todayStr = new Date().toISOString().split('T')[0];
 
 // --- DOM refs ---
 const studentListContainer = document.getElementById('student-list');
+const studentSearchInput = document.getElementById('student-search');
 const totalStudentsEl = document.getElementById('total-students');
 const presentStudentsEl = document.getElementById('present-students');
 const toastContainer = document.getElementById('toast-container');
@@ -108,11 +110,29 @@ const trashIconSVG = `
 
 // 4. Render — one DocumentFragment write instead of rebuilding innerHTML
 // per change, plus event delegation instead of inline onclick handlers.
+function getFilteredStudents() {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return students;
+    return students.filter((student) => student.name.toLowerCase().includes(term));
+}
+
 function renderStudents() {
     const fragment = document.createDocumentFragment();
+    const visibleStudents = getFilteredStudents();
     let presentCount = 0;
 
-    students.forEach((student, index) => {
+    if (!visibleStudents.length) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.innerHTML = `<p>No student found matching “${searchTerm.trim()}”.</p>`;
+        studentListContainer.innerHTML = '';
+        studentListContainer.appendChild(emptyState);
+        totalStudentsEl.innerText = students.length;
+        presentStudentsEl.innerText = students.filter((student) => student.isPresent).length;
+        return;
+    }
+
+    visibleStudents.forEach((student) => {
         if (student.isPresent) presentCount++;
 
         const card = document.createElement('div');
@@ -129,10 +149,10 @@ function renderStudents() {
                 </div>
                 <div class="sc-actions">
                     <div class="toggle-p-a">
-                        <button class="${student.isPresent ? 'active-p' : ''}" data-action="present" data-index="${index}">P</button>
-                        <button class="${!student.isPresent ? 'active-a' : ''}" data-action="absent" data-index="${index}">A</button>
+                        <button class="${student.isPresent ? 'active-p' : ''}" data-action="present" data-student-id="${student.id}">P</button>
+                        <button class="${!student.isPresent ? 'active-a' : ''}" data-action="absent" data-student-id="${student.id}">A</button>
                     </div>
-                    <button class="icon-btn-delete" data-action="delete" data-index="${index}" title="Remove student">
+                    <button class="icon-btn-delete" data-action="delete" data-student-id="${student.id}" title="Remove student">
                         ${trashIconSVG}
                     </button>
                 </div>
@@ -148,7 +168,7 @@ function renderStudents() {
                         <span class="pill-count">${student.rev}</span>
                     </div>
                 </div>
-                <input type="text" class="remark-input" placeholder="Remarks..." value="${student.remarks}" data-action="remark" data-index="${index}">
+                <input type="text" class="remark-input" placeholder="Remarks..." value="${student.remarks}" data-action="remark" data-student-id="${student.id}">
             </div>
         `;
         fragment.appendChild(card);
@@ -158,30 +178,43 @@ function renderStudents() {
     studentListContainer.appendChild(fragment);
 
     totalStudentsEl.innerText = students.length;
-    presentStudentsEl.innerText = presentCount;
+    presentStudentsEl.innerText = students.filter((student) => student.isPresent).length;
+}
+
+if (studentSearchInput) {
+    studentSearchInput.addEventListener('input', (event) => {
+        searchTerm = event.target.value;
+        renderStudents();
+    });
 }
 
 studentListContainer.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
-    const index = Number(btn.dataset.index);
+    const studentId = btn.dataset.studentId;
     const action = btn.dataset.action;
+    const student = students.find((item) => item.id === studentId);
+
+    if (!student) return;
 
     if (action === 'present') {
-        students[index].isPresent = true;
+        student.isPresent = true;
         renderStudents();
     } else if (action === 'absent') {
-        students[index].isPresent = false;
+        student.isPresent = false;
         renderStudents();
     } else if (action === 'delete') {
-        openDeleteModal(index);
+        openDeleteModal(studentId);
     }
 });
 
 studentListContainer.addEventListener('change', (e) => {
     const input = e.target.closest('[data-action="remark"]');
     if (!input) return;
-    students[Number(input.dataset.index)].remarks = input.value;
+    const student = students.find((item) => item.id === input.dataset.studentId);
+    if (student) {
+        student.remarks = input.value;
+    }
 });
 
 // 5. Basic Button Listeners
@@ -285,9 +318,12 @@ if (addStudentForm) {
 // signed-in user). With no data left, the student dashboard has nothing
 // to show even if they log in again. Full Auth-account deletion needs a
 // small backend (Cloud Function + Admin SDK) — ask if you want that added.
-function openDeleteModal(index) {
-    pendingDeleteId = students[index].id;
-    deleteStudentNameEl.innerText = students[index].name;
+function openDeleteModal(studentId) {
+    const student = students.find((item) => item.id === studentId);
+    if (!student) return;
+
+    pendingDeleteId = student.id;
+    deleteStudentNameEl.innerText = student.name;
     deleteStudentModal.classList.remove('hidden');
 }
 

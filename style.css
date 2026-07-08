@@ -95,15 +95,14 @@ body::before {
 }
 
 .logo {
-    width: 58px;
-    height: 58px;
+    width: 70px;
+    height: 70px;
     margin: 0 auto 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 18px;
-    background: #f8fafc;
-    color: #111827;
+    border-radius: 50px;
+    background: black;
     font-size: 28px;
 }
 
@@ -145,7 +144,7 @@ label {
 }
 
 input {
-    width: 90%;
+    width: 89%;
     padding: 16px 18px;
     margin-bottom: 18px;
     border: 1px solid #e5e7eb;
@@ -240,8 +239,32 @@ input:focus {
 .btn-outline:hover { background: #f4f5f7; }
 
 /* --- STUDENT CARDS & TOGGLES --- */
+.student-search-section { padding: 0 20px 15px; }
+.student-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.student-search-input:focus {
+    outline: none;
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(242, 156, 56, 0.12);
+}
 .student-list { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
 .student-card { background: var(--white); border-radius: 12px; padding: 15px; border-left: 5px solid #2e7d32; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.empty-state {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
 .student-card.absent { border-left: 5px solid var(--danger-red, #EA4335); }
 
 .sc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
