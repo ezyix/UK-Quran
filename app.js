@@ -2,20 +2,6 @@ import { signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/fir
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { auth, database } from "./firebase-config.js";
 
-// === LOADER MANAGEMENT ===
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.classList.add('hidden');
-    }
-}
-
-// Hide loader when page is fully loaded (including images, stylesheets, etc.)
-window.addEventListener('load', hideLoader);
-
-// Also hide loader after a maximum timeout (in case something fails to load)
-setTimeout(hideLoader, 8000);
-
 // UI Logic: Toggle Roles
 const btnStudent = document.getElementById('btn-student');
 const btnTeacher = document.getElementById('btn-teacher');
