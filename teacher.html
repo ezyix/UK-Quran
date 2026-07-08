@@ -98,7 +98,8 @@
                 <input type="text" id="new-student-id" placeholder="e.g. 1001" required>
 
                 <label>Login PIN</label>
-                <input type="number" id="new-student-pin" placeholder="e.g. 1234" required>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" id="new-student-pin" placeholder="e.g. 1234" minlength="4" required>
+                <small id="new-student-pin-hint" class="field-hint">PIN must be at least 4 digits.</small>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-outline" id="btn-cancel-add">Cancel</button>

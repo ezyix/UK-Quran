@@ -29,6 +29,7 @@ const newStudentNameInput = document.getElementById('new-student-name');
 const newStudentNameHint = document.getElementById('new-student-name-hint');
 const newStudentIdInput = document.getElementById('new-student-id');
 const newStudentPinInput = document.getElementById('new-student-pin');
+const newStudentPinHint = document.getElementById('new-student-pin-hint');
 
 const deleteStudentModal = document.getElementById('delete-student-modal');
 const deleteStudentNameEl = document.getElementById('delete-student-name');
@@ -236,9 +237,14 @@ if (newStudentNameInput) newStudentNameInput.addEventListener('input', updateStu
 function resetAddForm() {
     addStudentForm.reset();
     if (newStudentNameInput) newStudentNameInput.classList.remove('input-error');
+    if (newStudentPinInput) newStudentPinInput.classList.remove('input-error');
     if (newStudentNameHint) {
         newStudentNameHint.textContent = 'Name must be at least 3 characters.';
         newStudentNameHint.style.color = '#8E785C';
+    }
+    if (newStudentPinHint) {
+        newStudentPinHint.textContent = 'PIN must be at least 4 digits.';
+        newStudentPinHint.style.color = '#8E785C';
     }
 }
 
@@ -256,6 +262,19 @@ if (addStudentForm) {
             newStudentNameInput.classList.add('input-error');
             updateStudentNameHint();
             return;
+        }
+
+        if (pinVal.length < 4 || !/^\d+$/.test(pinVal)) {
+            newStudentPinInput.classList.add('input-error');
+        if (newStudentPinHint) {
+            newStudentPinHint.textContent = 'PIN must be at least 4 digits.';
+            newStudentPinHint.style.color = '#b71c1c';
+        }
+        return;
+    }
+        if (newStudentPinHint) {
+            newStudentPinHint.textContent = 'PIN must be at least 4 digits.';
+            newStudentPinHint.style.color = '#8E785C';
         }
 
         const nameLower = nameVal.toLowerCase();

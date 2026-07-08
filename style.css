@@ -183,6 +183,64 @@ input:focus {
     transform: translateY(-1px);
 }
 
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 56px;
+    box-sizing: border-box;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    border-radius: 999px;
+}
+
+.password-toggle:hover {
+    color: #111827;
+    background: rgba(17, 24, 39, 0.06);
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid rgba(99, 102, 241, 0.45);
+    outline-offset: 2px;
+}
+
+.password-toggle .icon-eye {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    display: block;
+}
+
+.password-toggle .icon-eye-slash {
+    display: none;
+}
+
+.password-toggle.is-visible .icon-eye-open {
+    display: none;
+}
+
+.password-toggle.is-visible .icon-eye-slash {
+    display: block;
+}
+
 .footer {
     margin-top: 24px;
     font-size: 0.87rem;
@@ -461,4 +519,39 @@ input.input-error {
 .btn-danger:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.password-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px; /* moved here, off the input */
+}
+
+.password-container input[type="password"],
+.password-container input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 56px;
+    margin-bottom: 0; /* no longer needed on the input itself */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    border-radius: 999px;
+    z-index: 2;
 }

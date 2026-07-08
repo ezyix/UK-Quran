@@ -119,7 +119,7 @@ function getMostFrequent(arr) {
 
 function generateReport() {
     document.getElementById('report-total-students').innerText = Object.keys(studentsObj).length;
-    
+
     const month = filterMonth.value;
     const year = filterYear.value;
 
@@ -133,21 +133,21 @@ function generateReport() {
     for (let studentId in studentsObj) {
         totals[studentId] = {
             name: studentsObj[studentId].name,
-            newPages: 0, rev: 0, present: 0, absent: 0, 
-            remarksList: [] // Collect all remarks for the mode calculation
+            newPages: 0, rev: 0, present: 0, absent: 0,
+            loggedDays: 0, // days THIS student actually has a log entry for
+            remarksList: []
         };
     }
 
-    let totalWorkingDays = 0;
     let allRemarksList = [];
 
     for (let dateKey in logsData) {
         if (dateKey.startsWith(prefix)) {
-            totalWorkingDays++;
             let dailyLog = logsData[dateKey];
 
             for (let studentId in dailyLog) {
                 if (totals[studentId]) {
+                    totals[studentId].loggedDays += 1;
                     const entry = dailyLog[studentId];
                     if (entry.isPresent) {
                         totals[studentId].present += 1;
@@ -157,7 +157,6 @@ function generateReport() {
                         totals[studentId].absent += 1;
                     }
                     if (entry.remarks && entry.remarks.trim() !== "") {
-                        // Push to individual student's list AND the class's total list
                         totals[studentId].remarksList.push(entry.remarks.trim());
                         allRemarksList.push(entry.remarks.trim());
                     }
@@ -167,17 +166,20 @@ function generateReport() {
     }
 
     let totalPresencePercentage = 0;
-    let studentCount = Object.keys(totals).length;
+    let studentsWithData = 0;
     latestReportRows = [];
 
     for (let id in totals) {
         let st = totals[id];
 
-        if (totalWorkingDays > 0) {
-            totalPresencePercentage += (st.present / totalWorkingDays) * 100;
+        // Only count this student toward the average if they actually have
+        // at least one logged day this month — otherwise dividing by 0 (or
+        // by days before they existed) skews the class average unfairly.
+        if (st.loggedDays > 0) {
+            totalPresencePercentage += (st.present / st.loggedDays) * 100;
+            studentsWithData++;
         }
 
-        // Calculate the most frequent remark for this student
         const finalRemark = getMostFrequent(st.remarksList);
 
         const presentStyle = st.present > 0 ? "color: #137333; font-weight:bold;" : "";
@@ -201,19 +203,17 @@ function generateReport() {
             rev: st.rev > 0 ? st.rev : '',
             present: st.present,
             absent: st.absent,
-            remark: finalRemark // Push the calculated frequent remark to PDF data
+            remark: finalRemark
         });
     }
 
-    // Update Average Presence
-    if (studentCount > 0 && totalWorkingDays > 0) {
-        let finalAvg = (totalPresencePercentage / studentCount).toFixed(0);
+    if (studentsWithData > 0) {
+        let finalAvg = (totalPresencePercentage / studentsWithData).toFixed(0);
         document.getElementById('report-avg-presence').innerText = `${finalAvg}%`;
     } else {
         document.getElementById('report-avg-presence').innerText = `0%`;
     }
 
-    // Update Average Grade
     document.getElementById('report-avg-grade').innerText = calculateAvgGrade(allRemarksList);
 
     latestReportSummary = {

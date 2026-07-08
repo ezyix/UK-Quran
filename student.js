@@ -59,7 +59,12 @@ onAuthStateChanged(auth, async (user) => {
             loadTodayData();
             loadMonthlyHistory();
         } else {
-            alert("Error: Could not find your teacher in the database.");
+            // Student record no longer exists in the database (e.g. teacher
+            // deleted them), even though their old login still technically
+            // works. Sign them out immediately and send them back with a
+            // clear error instead of leaving them on a broken dashboard.
+            await signOut(auth);
+            window.location.href = 'index.html?error=account_removed';
         }
     } else {
         window.location.href = 'index.html';
