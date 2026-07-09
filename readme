@@ -1,0 +1,11 @@
+  <button class="icon-btn-delete" data-action="delete" data-student-id="${student.id}" title="Remove student">
+    ${trashIconSVG}
+    </button> 
+// this is the button that will delete student from the list 
+
+
+// this code is teacher.html   line 171
+
+// i just removed from there 
+
+// it will help in future if you want to add delete button for each student in the list

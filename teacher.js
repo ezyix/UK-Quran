@@ -168,9 +168,7 @@ function renderStudents() {
                         <button class="${student.isPresent ? 'active-p' : ''}" data-action="present" data-student-id="${student.id}">P</button>
                         <button class="${!student.isPresent ? 'active-a' : ''}" data-action="absent" data-student-id="${student.id}">A</button>
                     </div>
-                    <button class="icon-btn-delete" data-action="delete" data-student-id="${student.id}" title="Remove student">
-                        ${trashIconSVG}
-                    </button>
+
                 </div>
             </div>
             <div class="sc-bottom">
