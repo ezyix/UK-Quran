@@ -176,7 +176,7 @@ function renderStudents() {
             <div class="sc-bottom">
                 <div class="progress-row">
                     <div class="progress-item">
-                        <span>New</span>
+                        <span>New </span>
                         <div class="stepper-controls">
                             <button type="button" data-action="new-minus" data-student-id="${student.id}">-</button>
                             <span>${student.newPages}</span>
@@ -191,7 +191,9 @@ function renderStudents() {
                             <button type="button" data-action="rev-plus" data-student-id="${student.id}">+</button>
                         </div>
                     </div>
-                    <button class="btn-outline btn-monthly-progress" data-action="monthly-progress" data-student-id="${student.id}" style="height: 40px; align-self: center;">Monthly Progress</button>
+                    <div class="progress-button-row">
+                        <button class="btn-outline btn-monthly-progress" data-action="monthly-progress" data-student-id="${student.id}">Monthly Progress</button>
+                    </div>
                 </div>
                 <div class="heard-by-row">
                     <label for="heard-by-${student.id}">Heard by</label>
