@@ -10,8 +10,6 @@ const lblPassword = document.getElementById('lbl-password');
 const inputId = document.getElementById('input-id');
 const inputPassword = document.getElementById('input-password');
 const toastContainer = document.getElementById('toast-container');
-const loginForm = document.getElementById('login-form');
-const loginButton = document.querySelector('.btn-primary');
 
 let currentRole = 'student';
 
@@ -156,56 +154,59 @@ window.addEventListener('load', () => {
 });
 
 // Login Logic
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        const idOrEmail = inputId.value.trim();
-        const passwordOrPin = inputPassword.value.trim();
-        const submitBtn = loginButton;
+    const idOrEmail = inputId.value.trim();
+    const passwordOrPin = inputPassword.value.trim();
+    const submitBtn = document.querySelector('.btn-primary');
 
-        if (!submitBtn) return;
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Loading...";
+    submitBtn.innerText = "Loading...";
 
-        try {
-            if (currentRole === 'teacher') {
-                await signInWithEmailAndPassword(auth, idOrEmail, passwordOrPin);
+    if (currentRole === 'teacher') {
+        // Teacher Login uses standard Firebase Auth directly.
+        signInWithEmailAndPassword(auth, idOrEmail, passwordOrPin)
+            .then(() => {
                 window.location.href = "teacher.html";
-                return;
-            }
+            })
+            .catch(() => {
+                showToast("Login failed: Invalid Input", "error");
+                submitBtn.innerText = "Login ➔";
+            });
 
-            const studentId = idOrEmail.toLowerCase();
-            const studentEmail = `${studentId}@student.ukquran.com`;
-            const authPassword = toAuthPassword(passwordOrPin);
+    } else if (currentRole === 'student') {
+    const studentEmail = `${idOrEmail.toLowerCase()}@student.ukquran.com`;
+    const authPassword = toAuthPassword(passwordOrPin);
 
-            await signInWithEmailAndPassword(auth, studentEmail, authPassword);
-            const indexSnap = await get(ref(database, `studentIndex/${studentId}`));
-            if (!indexSnap.exists()) {
-                throw new Error('student-missing');
-            }
+    try {
+        await signInWithEmailAndPassword(auth, studentEmail, authPassword);
 
-            const indexData = indexSnap.val();
-            if (!indexData?.teacherUid) {
-                throw new Error('student-missing');
-            }
+        // Login succeeded, but that only proves the old Auth account still
+        // exists — it doesn't mean the student record is still in the
+        // database (a teacher may have deleted them since). Check that
+        // BEFORE navigating anywhere, so a removed student never even
+        // briefly sees the dashboard.
+        const studentId = idOrEmail.toLowerCase();
+        const teachersSnap = await get(ref(database, 'teachers'));
+        let stillExists = false;
 
-            const studentSnap = await get(ref(database, `teachers/${indexData.teacherUid}/students/${studentId}`));
-            if (!studentSnap.exists()) {
-                throw new Error('student-missing');
-            }
+        if (teachersSnap.exists()) {
+            teachersSnap.forEach((teacherSnap) => {
+                const students = teacherSnap.child('students').val();
+                if (students && students[studentId]) stillExists = true;
+            });
+        }
 
+        if (stillExists) {
             window.location.href = "student.html";
-        } catch (error) {
-            if (error.message === 'student-missing') {
-                await signOut(auth);
-                showToast("This account no longer exists. Please contact your teacher.", "error");
-            } else {
-                showToast("Invalid Student ID or PIN.", "error");
-            }
-        } finally {
-            submitBtn.disabled = false;
+        } else {
+            await signOut(auth);
+            showToast("This account no longer exists. Please contact your teacher.", "error");
             submitBtn.innerText = "Login ➔";
         }
-    });
+    } catch (error) {
+        showToast("Invalid Student ID or PIN.", "error");
+        submitBtn.innerText = "Login ➔";
+    }
 }
+})

@@ -7,7 +7,6 @@ let students = [];
 let pendingDeleteId = null;
 let searchTerm = '';
 const todayStr = new Date().toISOString().split('T')[0];
-const studentCardMap = new Map();
 
 // --- DOM refs ---
 const studentListContainer = document.getElementById('student-list');
@@ -118,76 +117,10 @@ function getFilteredStudents() {
     return students.filter((student) => student.name.toLowerCase().includes(term));
 }
 
-function createStudentCard(student) {
-    const card = document.createElement('div');
-    card.className = `student-card ${student.isPresent ? '' : 'absent'}`;
-    card.dataset.studentId = student.id;
-
-    card.innerHTML = `
-        <div class="sc-top">
-            <div class="sc-info">
-                <div class="av">${userIconSVG}</div>
-                <div>
-                    <h4>${student.name}</h4>
-                    <p class="student-meta">ID: ${student.id} | PIN: ${student.pin}</p>
-                </div>
-            </div>
-            <div class="sc-actions">
-                <div class="toggle-p-a">
-                    <button class="${student.isPresent ? 'active-p' : ''}" data-action="present" data-student-id="${student.id}">P</button>
-                    <button class="${!student.isPresent ? 'active-a' : ''}" data-action="absent" data-student-id="${student.id}">A</button>
-                </div>
-                <button class="icon-btn-delete" data-action="delete" data-student-id="${student.id}" title="Remove student">
-                    ${trashIconSVG}
-                </button>
-            </div>
-        </div>
-        <div class="sc-bottom">
-            <div class="badges" role="list" aria-label="Learning progress">
-                <div class="pill-badge" role="listitem" data-count="${student.newPages}" aria-label="New pages ${student.newPages}">
-                    <span class="pill-label">New</span>
-                    <span class="pill-count" data-role="new-pages">${student.newPages}</span>
-                </div>
-                <div class="pill-badge" role="listitem" data-count="${student.rev}" aria-label="Revision pages ${student.rev}">
-                    <span class="pill-label">Revision</span>
-                    <span class="pill-count" data-role="rev-pages">${student.rev}</span>
-                </div>
-            </div>
-            <input type="text" class="remark-input" placeholder="Remarks..." value="${student.remarks}" data-action="remark" data-student-id="${student.id}">
-        </div>
-    `;
-
-    studentCardMap.set(student.id, card);
-    return card;
-}
-
-function updateTotals() {
-    totalStudentsEl.innerText = students.length;
-    presentStudentsEl.innerText = students.filter((student) => student.isPresent).length;
-}
-
-function updateStudentCard(student) {
-    const card = studentCardMap.get(student.id);
-    if (!card) return;
-
-    card.classList.toggle('absent', !student.isPresent);
-    const presentButton = card.querySelector('button[data-action="present"]');
-    const absentButton = card.querySelector('button[data-action="absent"]');
-    const newPagesCount = card.querySelector('span[data-role="new-pages"]');
-    const revPagesCount = card.querySelector('span[data-role="rev-pages"]');
-    const remarkInput = card.querySelector('input[data-action="remark"]');
-
-    if (presentButton) presentButton.classList.toggle('active-p', student.isPresent);
-    if (absentButton) absentButton.classList.toggle('active-a', !student.isPresent);
-    if (newPagesCount) newPagesCount.textContent = student.newPages;
-    if (revPagesCount) revPagesCount.textContent = student.rev;
-    if (remarkInput) remarkInput.value = student.remarks;
-}
-
 function renderStudents() {
-    studentCardMap.clear();
     const fragment = document.createDocumentFragment();
     const visibleStudents = getFilteredStudents();
+    let presentCount = 0;
 
     if (!visibleStudents.length) {
         const emptyState = document.createElement('div');
@@ -195,17 +128,58 @@ function renderStudents() {
         emptyState.innerHTML = `<p>No student found matching “${searchTerm.trim()}”.</p>`;
         studentListContainer.innerHTML = '';
         studentListContainer.appendChild(emptyState);
-        updateTotals();
+        totalStudentsEl.innerText = students.length;
+        presentStudentsEl.innerText = students.filter((student) => student.isPresent).length;
         return;
     }
 
     visibleStudents.forEach((student) => {
-        fragment.appendChild(createStudentCard(student));
+        if (student.isPresent) presentCount++;
+
+        const card = document.createElement('div');
+        card.className = `student-card ${student.isPresent ? '' : 'absent'}`;
+
+        card.innerHTML = `
+            <div class="sc-top">
+                <div class="sc-info">
+                    <div class="av">${userIconSVG}</div>
+                    <div>
+                        <h4>${student.name}</h4>
+                        <p class="student-meta">ID: ${student.id} | PIN: ${student.pin}</p>
+                    </div>
+                </div>
+                <div class="sc-actions">
+                    <div class="toggle-p-a">
+                        <button class="${student.isPresent ? 'active-p' : ''}" data-action="present" data-student-id="${student.id}">P</button>
+                        <button class="${!student.isPresent ? 'active-a' : ''}" data-action="absent" data-student-id="${student.id}">A</button>
+                    </div>
+                    <button class="icon-btn-delete" data-action="delete" data-student-id="${student.id}" title="Remove student">
+                        ${trashIconSVG}
+                    </button>
+                </div>
+            </div>
+            <div class="sc-bottom">
+                <div class="badges" role="list" aria-label="Learning progress">
+                    <div class="pill-badge" role="listitem" data-count="${student.newPages}" aria-label="New pages ${student.newPages}">
+                        <span class="pill-label">New</span>
+                        <span class="pill-count">${student.newPages}</span>
+                    </div>
+                    <div class="pill-badge" role="listitem" data-count="${student.rev}" aria-label="Revision pages ${student.rev}">
+                        <span class="pill-label">Revision</span>
+                        <span class="pill-count">${student.rev}</span>
+                    </div>
+                </div>
+                <input type="text" class="remark-input" placeholder="Remarks..." value="${student.remarks}" data-action="remark" data-student-id="${student.id}">
+            </div>
+        `;
+        fragment.appendChild(card);
     });
 
     studentListContainer.innerHTML = '';
     studentListContainer.appendChild(fragment);
-    updateTotals();
+
+    totalStudentsEl.innerText = students.length;
+    presentStudentsEl.innerText = students.filter((student) => student.isPresent).length;
 }
 
 if (studentSearchInput) {
@@ -245,13 +219,7 @@ studentListContainer.addEventListener('change', (e) => {
 });
 
 // 5. Basic Button Listeners
-if (btnMarkAll) btnMarkAll.addEventListener('click', () => {
-    students.forEach((student) => {
-        student.isPresent = true;
-        updateStudentCard(student);
-    });
-    updateTotals();
-});
+if (btnMarkAll) btnMarkAll.addEventListener('click', () => { students.forEach(s => s.isPresent = true); renderStudents(); });
 if (btnLogout) btnLogout.addEventListener('click', () => { signOut(auth).then(() => window.location.href = 'index.html'); });
 if (btnViewReports) btnViewReports.addEventListener('click', () => window.location.href = 'reports.html');
 
@@ -338,11 +306,8 @@ if (addStudentForm) {
         createUserWithEmailAndPassword(secondaryAuth, studentEmail, authPassword)
             .then(() => secondarySignOut(secondaryAuth))
             .then(() => {
-                const updates = {
-                    [`teachers/${currentTeacherUid}/students/${idVal}`]: { name: nameVal, pin: pinVal },
-                    [`studentIndex/${idVal}`]: { teacherUid: currentTeacherUid, studentName: nameVal }
-                };
-                return update(ref(database), updates);
+                const newStudentRef = ref(database, `teachers/${currentTeacherUid}/students/${idVal}`);
+                return set(newStudentRef, { name: nameVal, pin: pinVal });
             })
             .then(() => {
                 students.push({ id: idVal, name: nameVal, pin: pinVal, isPresent: true, newPages: 0, rev: 0, remarks: "" });
@@ -397,21 +362,21 @@ if (btnConfirmDelete) {
         btnConfirmDelete.innerText = "Deleting...";
 
         try {
-            const updates = {
-                [`teachers/${currentTeacherUid}/students/${idToDelete}`]: null,
-                [`studentIndex/${idToDelete}`]: null
-            };
+            await remove(ref(database, `teachers/${currentTeacherUid}/students/${idToDelete}`));
 
             const logsSnap = await get(ref(database, `teachers/${currentTeacherUid}/logs`));
             if (logsSnap.exists()) {
+                const updates = {};
                 logsSnap.forEach((daySnap) => {
                     if (daySnap.hasChild(idToDelete)) {
                         updates[`teachers/${currentTeacherUid}/logs/${daySnap.key}/${idToDelete}`] = null;
                     }
                 });
+                if (Object.keys(updates).length > 0) {
+                    await update(ref(database), updates);
+                }
             }
 
-            await update(ref(database), updates);
             students = students.filter(s => s.id !== idToDelete);
             renderStudents();
             closeDeleteModal();
@@ -438,7 +403,7 @@ if (btnSaveReport) {
         });
 
         const logRef = ref(database, `teachers/${currentTeacherUid}/logs/${todayStr}`);
-        update(logRef, logData)
+        set(logRef, logData)
             .then(() => {
                 showToast("Daily report saved successfully!", "success");
                 btnSaveLabel.innerText = "✅ Saved Successfully!";

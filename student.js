@@ -73,13 +73,17 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 async function findMyTeacher() {
-    const indexRef = ref(database, `studentIndex/${myStudentId}`);
-    const snap = await get(indexRef);
+    const teachersRef = ref(database, 'teachers');
+    const snap = await get(teachersRef);
 
     if (snap.exists()) {
-        const indexData = snap.val();
-        myTeacherUid = indexData.teacherUid;
-        myName = indexData.studentName || myName;
+        snap.forEach((teacherSnap) => {
+            const students = teacherSnap.child('students').val();
+            if (students && students[myStudentId]) {
+                myTeacherUid = teacherSnap.key;
+                myName = students[myStudentId].name;
+            }
+        });
     }
 
     headerName.innerText = myName;
@@ -88,70 +92,72 @@ async function findMyTeacher() {
 }
 
 // --- 2. LOAD DAILY & HISTORY DATA ---
-async function loadTodayData() {
+function loadTodayData() {
     const todayRef = ref(database, `teachers/${myTeacherUid}/logs/${todayStr}/${myStudentId}`);
-    const snap = await get(todayRef);
-    if (snap.exists()) {
-        const data = snap.val();
-        isPresent = data.isPresent !== false; // default true
-        updatePresentUI();
-        inpNew.value = data.newPages || 0;
-        inpRev.value = data.rev || 0;
-        if (inpRevHeardBy) {
-            inpRevHeardBy.value = data.revHeardBy || '';
+    get(todayRef).then((snap) => {
+        if (snap.exists()) {
+            const data = snap.val();
+            isPresent = data.isPresent !== false; // default true
+            updatePresentUI();
+            inpNew.value = data.newPages || 0;
+            inpRev.value = data.rev || 0;
+            if (inpRevHeardBy) {
+                inpRevHeardBy.value = data.revHeardBy || '';
+            }
+            btnSubmit.innerHTML = "✅ Update Progress";
         }
-        btnSubmit.innerHTML = "✅ Update Progress";
-    }
+    });
 }
 
-async function loadMonthlyHistory() {
-    const logsRef = query(
-        ref(database, `teachers/${myTeacherUid}/logs`),
-        orderByKey(),
-        startAt(`${currentMonthPrefix}-01`),
-        endAt(`${currentMonthPrefix}-31`)
-    );
+function loadMonthlyHistory() {
+    const logsRef = ref(database, `teachers/${myTeacherUid}/logs`);
+    get(logsRef).then((snap) => {
+        historyTable.innerHTML = '';
+        let hasData = false;
 
-    const snap = await get(logsRef);
-    historyTable.innerHTML = '';
-    let hasData = false;
+        if (snap.exists()) {
+            const allLogs = snap.val();
+            const sortedDates = Object.keys(allLogs)
+                .filter(date => date.startsWith(currentMonthPrefix))
+                .sort((a, b) => b.localeCompare(a));
 
-    if (snap.exists()) {
-        const logs = snap.val();
-        const sortedDates = Object.keys(logs).sort((a, b) => b.localeCompare(a));
+            sortedDates.forEach(dateKey => {
+                const dailyData = allLogs[dateKey];
+                if (dailyData[myStudentId]) {
+                    hasData = true;
+                    const entry = dailyData[myStudentId];
 
-        sortedDates.forEach(dateKey => {
-            const dailyData = logs[dateKey];
-            if (dailyData && dailyData[myStudentId]) {
-                hasData = true;
-                const entry = dailyData[myStudentId];
-                const p = entry.isPresent ? "1" : "0";
-                const a = !entry.isPresent ? "1" : "0";
-                const pStyle = entry.isPresent ? "color: #137333; font-weight:bold;" : "";
-                const aStyle = !entry.isPresent ? "color: #b71c1c; font-weight:bold; background:#ffebee;" : "";
-                const rmk = (entry.remarks && entry.remarks.trim() !== "") ? entry.remarks : "";
+                    const p = entry.isPresent ? "1" : "0";
+                    const a = !entry.isPresent ? "1" : "0";
+                    const pStyle = entry.isPresent ? "color: #137333; font-weight:bold;" : "";
+                    const aStyle = !entry.isPresent ? "color: #b71c1c; font-weight:bold; background:#ffebee;" : "";
+                    const rmk = (entry.remarks && entry.remarks.trim() !== "") ? entry.remarks : "";
 
-                const [yy, mm, dd] = dateKey.split('-').map(Number);
-                const dateObj = new Date(yy, mm - 1, dd);
-                const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                    // Parse date parts manually — new Date("YYYY-MM-DD") parses
+                    // as UTC midnight and can shift a day depending on the
+                    // viewer's timezone. This avoids that.
+                    const [yy, mm, dd] = dateKey.split('-').map(Number);
+                    const dateObj = new Date(yy, mm - 1, dd);
+                    const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="sticky-col" style="font-size:11px;">${formattedDate}</td>
-                    <td>${entry.newPages > 0 ? entry.newPages : ""}</td>
-                    <td>${entry.rev > 0 ? entry.rev : ""}</td>
-                    <td style="${pStyle}">${p}</td>
-                    <td style="${aStyle}">${a}</td>
-                    <td style="font-size:11px; ${rmk ? 'color:#1b5e20;' : ''}">${rmk}</td>
-                `;
-                historyTable.appendChild(tr);
-            }
-        });
-    }
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="sticky-col" style="font-size:11px;">${formattedDate}</td>
+                        <td>${entry.newPages > 0 ? entry.newPages : ""}</td>
+                        <td>${entry.rev > 0 ? entry.rev : ""}</td>
+                        <td style="${pStyle}">${p}</td>
+                        <td style="${aStyle}">${a}</td>
+                        <td style="font-size:11px; ${rmk ? 'color:#1b5e20;' : ''}">${rmk}</td>
+                    `;
+                    historyTable.appendChild(tr);
+                }
+            });
+        }
 
-    if (!hasData) {
-        historyTable.innerHTML = `<tr><td colspan="6" style="padding:20px; color:#888;">No history yet for this month.</td></tr>`;
-    }
+        if (!hasData) {
+            historyTable.innerHTML = `<tr><td colspan="6" style="padding:20px; color:#888;">No history yet for this month.</td></tr>`;
+        }
+    });
 }
 
 // --- 3. UI INTERACTIONS ---
