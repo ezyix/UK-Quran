@@ -192,12 +192,13 @@ function renderStudents() {
                         </div>
                     </div>
                 </div>
-                <button class="btn-outline btn-monthly-progress full-width" data-action="monthly-progress" data-student-id="${student.id}">View Monthly Progress</button>
                 <div class="heard-by-row">
-                    <label for="heard-by-${student.id}">Heard by</label>
+                    <label for="heard-by-${student.id}">Revision heard by</label>
                     <input type="text" id="heard-by-${student.id}" value="${student.revHeardBy || ''}" data-action="heardby" data-student-id="${student.id}" placeholder="Enter name">
                 </div>
                 <input type="text" class="remark-input" placeholder="Remarks..." value="${student.remarks}" data-action="remark" data-student-id="${student.id}">
+                <button class="btn-outline btn-monthly-progress full-width" data-action="monthly-progress" data-student-id="${student.id}">View Monthly Progress</button>
+
             </div>
         `;
         fragment.appendChild(card);
