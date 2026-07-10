@@ -49,7 +49,7 @@ btnStudent.addEventListener('click', () => {
     btnTeacher.classList.remove('active');
     lblId.innerText = 'Student ID';
     inputId.type = 'text';
-    inputId.placeholder = '12345-XXX';
+    inputId.placeholder = 'name';
     lblPassword.innerText = 'PIN';
     inputPassword.value = '';
     inputId.value = '';
@@ -80,8 +80,10 @@ togglePassword.addEventListener('click', function () {
 const a2hsPrompt = document.getElementById('a2hs-prompt');
 const btnAddHome = document.getElementById('btn-add-home');
 const btnDismissA2HS = document.getElementById('btn-dismiss-a2hs');
+const btnAlreadyAdded = document.getElementById('btn-already-added');
 const iosA2HSTip = document.getElementById('ios-a2hs-tip');
 let deferredPrompt = null;
+const a2hsAddedStorageKey = 'ukquran_a2hs_added';
 
 function isIos() {
     return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
@@ -92,7 +94,12 @@ function isInStandaloneMode() {
 }
 
 function shouldShowPrompt() {
-    return !localStorage.getItem('ukquran_a2hs_added') && !localStorage.getItem('ukquran_a2hs_dismissed');
+    return !localStorage.getItem(a2hsAddedStorageKey);
+}
+
+function markPromptAsAdded() {
+    localStorage.setItem(a2hsAddedStorageKey, 'true');
+    hideA2HSPrompt();
 }
 
 function showA2HSPrompt() {
@@ -115,20 +122,21 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 
 window.addEventListener('appinstalled', () => {
-    localStorage.setItem('ukquran_a2hs_added', 'true');
-    hideA2HSPrompt();
+    markPromptAsAdded();
 });
 
 btnAddHome.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+        markPromptAsAdded();
+        return;
+    }
+
     deferredPrompt.prompt();
     const choiceResult = await deferredPrompt.userChoice;
 
     if (choiceResult.outcome === 'accepted') {
-        localStorage.setItem('ukquran_a2hs_added', 'true');
-        hideA2HSPrompt();
+        markPromptAsAdded();
     } else {
-        localStorage.setItem('ukquran_a2hs_dismissed', 'true');
         hideA2HSPrompt();
     }
 
@@ -136,16 +144,25 @@ btnAddHome.addEventListener('click', async () => {
 });
 
 btnDismissA2HS.addEventListener('click', () => {
-    localStorage.setItem('ukquran_a2hs_dismissed', 'true');
     hideA2HSPrompt();
 });
+
+if (btnAlreadyAdded) {
+    btnAlreadyAdded.addEventListener('click', () => {
+        markPromptAsAdded();
+    });
+}
 
 window.addEventListener('load', () => {
     if (!shouldShowPrompt()) {
         hideA2HSPrompt();
-    } else if (isIos() && !isInStandaloneMode()) {
+    } else {
         showA2HSPrompt();
-        iosA2HSTip.classList.remove('hidden');
+        if (isIos() && !isInStandaloneMode()) {
+            iosA2HSTip.classList.remove('hidden');
+        } else {
+            iosA2HSTip.classList.add('hidden');
+        }
     }
 
     if ('serviceWorker' in navigator) {
