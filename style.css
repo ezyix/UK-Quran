@@ -363,21 +363,13 @@ input:focus {
 .btn-link {
     border: none;
     background:transparent;
-    color: red;
+    color: black;
     font-weight: 700;
     cursor: pointer;
     padding: 0;
     margin-left: 10px;
 }
-.btn-link2 {
-    border: none;
-    background: transparent;
-    color: green;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 0;
-    margin-left: 190px;
-}
+
 
 .hidden {
     display: none !important;
