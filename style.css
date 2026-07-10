@@ -109,7 +109,7 @@ body::before {
     display: flex;
     gap: 10px;
     margin-bottom: 26px;
-    width: 80%;
+    width: 85%;
     margin-left: 25px;
 }
 
@@ -187,7 +187,7 @@ input:focus {
     transform: translateY(-1px);
 }
 .btn-primary1 {
-    width: 80%;
+    width: 85%;
     border-radius: 16px;
     background: #111827;
     box-sizing: border-box;
@@ -207,7 +207,7 @@ input:focus {
     transform: translateY(-1px);
 }
 .nameinput{
-    width: 80%;
+    width: 85%;
     padding-right: 56px;
     box-sizing: border-box;
     position: relative;
@@ -217,11 +217,11 @@ input:focus {
 
 .password-container {
     position: relative;
-    width: 80%;
+    width: 85%;
 }
 
 .password-container input {
-    width: 80%;
+    width: 85%;
     padding-right: 56px;
     box-sizing: border-box;
     height: 45px;
@@ -277,7 +277,7 @@ input:focus {
 
 .footer {
     margin-top: 44px;
-    font-size: 0.83rem;
+    font-size: 0.89rem;
     color: white;
     text-align: center;
 }
@@ -650,7 +650,7 @@ input.input-error {
 
 .password-container {
     position: relative;
-    width:88%;
+    width:93%;
     display: flex;
     align-items: center;
     margin-bottom: 18px; /* moved here, off the input */
