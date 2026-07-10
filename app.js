@@ -127,7 +127,12 @@ window.addEventListener('appinstalled', () => {
 
 btnAddHome.addEventListener('click', async () => {
     if (!deferredPrompt) {
-        markPromptAsAdded();
+        if (isIos() && !isInStandaloneMode()) {
+            showToast('Use the browser Share menu and choose Add to Home Screen.', 'error');
+            return;
+        }
+
+        showToast('Install prompt is not available yet. Please refresh and try again.', 'error');
         return;
     }
 
@@ -136,8 +141,10 @@ btnAddHome.addEventListener('click', async () => {
 
     if (choiceResult.outcome === 'accepted') {
         markPromptAsAdded();
+        showToast('App added to home screen!', 'success');
     } else {
         hideA2HSPrompt();
+        showToast('Install canceled. The prompt will reappear later.', 'error');
     }
 
     deferredPrompt = null;

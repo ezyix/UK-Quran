@@ -298,7 +298,7 @@ input:focus {
     left: 50%;
     bottom: 18px;
     transform: translateX(-50%);
-    width: min(370px, 80%);
+    width: min(420px, 92%);
     z-index: 9999;
 }
 
@@ -376,7 +376,7 @@ input:focus {
     font-weight: 700;
     cursor: pointer;
     padding: 0;
-    margin-left: 140px;
+    margin-left: 190px;
 }
 
 .hidden {
