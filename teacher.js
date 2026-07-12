@@ -230,6 +230,11 @@ function saveProgressEditModal() {
         revHeardBy: progressEditHeardBy.value.trim()
     };
 
+    if (btnSaveProgressEdit) {
+        btnSaveProgressEdit.disabled = true;
+        btnSaveProgressEdit.innerHTML = '<span class="loader-inline1" aria-hidden="true"></span>';
+    }
+
     const logRef = ref(database, `teachers/${currentTeacherUid}/logs/${currentProgressEditDateKey}`);
     update(logRef, {
         [currentProgressStudentId]: payload
@@ -245,11 +250,22 @@ function saveProgressEditModal() {
             matchedStudent.remarks = payload.remarks;
             renderStudents();
         }
-        closeProgressEditModal();
-        loadStudentProgressReport(currentProgressStudentId);
-        showToast('Monthly progress updated successfully.', 'success');
+
+        setTimeout(() => {
+            if (btnSaveProgressEdit) {
+                btnSaveProgressEdit.disabled = false;
+                btnSaveProgressEdit.innerHTML = 'Save Changes';
+            }
+            closeProgressEditModal();
+            loadStudentProgressReport(currentProgressStudentId);
+            showToast('Monthly progress updated successfully.', 'success');
+        }, 3000);
     }).catch((error) => {
         console.error(error);
+        if (btnSaveProgressEdit) {
+            btnSaveProgressEdit.disabled = false;
+            btnSaveProgressEdit.innerHTML = 'Save Changes';
+        }
         showToast('Unable to update monthly progress.', 'error');
     });
 }

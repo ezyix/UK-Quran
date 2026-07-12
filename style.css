@@ -704,6 +704,16 @@ input.input-error {
     animation: spin 0.9s linear infinite;
     vertical-align: middle;
 }
+.loader-inline1 {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(0,0,0,0.08);
+    border-top: 2.5px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    vertical-align: middle;
+}
 .loader-block {
     width: 100%;
     height: 64px;
