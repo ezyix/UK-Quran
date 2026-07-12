@@ -18,18 +18,25 @@ const historyTable = document.getElementById('history-table-body');
 const toastContainer = document.getElementById('toast-container');
 
 // Input Elements
-let isPresent = true;
+let isPresent = false;
 
 const inpNew = document.getElementById('inp-new');
-const btnNewPlus = document.getElementById('btn-new-plus');
-const btnNewMinus = document.getElementById('btn-new-minus');
-
 const inpRev = document.getElementById('inp-rev');
-const btnRevPlus = document.getElementById('btn-rev-plus');
-const btnRevMinus = document.getElementById('btn-rev-minus');
 const inpRevHeardBy = document.getElementById('inp-rev-heard-by');
 
 const btnSubmit = document.getElementById('btn-submit-progress');
+
+function populateNumberSelect(selectEl, selectedValue = 0) {
+    if (!selectEl) return;
+    const safeValue = Math.max(0, Math.min(1000, Number(selectedValue) || 0));
+    selectEl.innerHTML = Array.from({ length: 1001 }, (_, value) => {
+        return `<option value="${value}">${value}</option>`;
+    }).join('');
+    selectEl.value = String(safeValue);
+}
+
+populateNumberSelect(inpNew, 0);
+populateNumberSelect(inpRev, 0);
 
 // --- Helper: Toast Notification ---
 function showToast(message, type = 'success') {
@@ -97,10 +104,10 @@ function loadTodayData() {
     get(todayRef).then((snap) => {
         if (snap.exists()) {
             const data = snap.val();
-            isPresent = data.isPresent !== false; // default true
+            isPresent = data.isPresent === true;
             updatePresentUI();
-            inpNew.value = data.newPages || 0;
-            inpRev.value = data.rev || 0;
+            populateNumberSelect(inpNew, data.newPages || 0);
+            populateNumberSelect(inpRev, data.rev || 0);
             if (inpRevHeardBy) {
                 inpRevHeardBy.value = data.revHeardBy || '';
             }
@@ -161,10 +168,6 @@ function loadMonthlyHistory() {
 }
 
 // --- 3. UI INTERACTIONS ---
-btnNewPlus.addEventListener('click', () => inpNew.value = parseInt(inpNew.value) + 1);
-btnNewMinus.addEventListener('click', () => { if (inpNew.value > 0) inpNew.value = parseInt(inpNew.value) - 1; });
-btnRevPlus.addEventListener('click', () => inpRev.value = parseInt(inpRev.value) + 1);
-btnRevMinus.addEventListener('click', () => { if (inpRev.value > 0) inpRev.value = parseInt(inpRev.value) - 1; });
 
 // Two-button segmented toggle (matches teacher dashboard's P/A pattern) —
 // no ambiguous single-button flip.

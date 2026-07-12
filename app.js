@@ -159,9 +159,10 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     const idOrEmail = inputId.value.trim();
     const passwordOrPin = inputPassword.value.trim();
-    const submitBtn = document.querySelector('.btn-primary');
+    const submitBtn = document.getElementById('btn');
 
-    submitBtn.innerHTML = '<div class="loader-inline" aria-hidden="true"></div>';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loader-inline" aria-hidden="true"></span>';
 
     if (currentRole === 'teacher') {
         // Teacher Login uses standard Firebase Auth directly.
@@ -170,8 +171,9 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                 window.location.href = "teacher.html";
             })
             .catch(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Login ➔";
                 showToast("Login failed: Invalid Input", "error");
-                submitBtn.innerText = "Login ➔";
             });
 
     } else if (currentRole === 'student') {
@@ -201,12 +203,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             window.location.href = "student.html";
         } else {
             await signOut(auth);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Login ➔";
             showToast("This account no longer exists. Please contact your teacher.", "error");
-            submitBtn.innerText = "Login ➔";
         }
     } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Login ➔";
         showToast("Invalid Student ID or PIN.", "error");
-        submitBtn.innerText = "Login ➔";
     }
 }
 })

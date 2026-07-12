@@ -27,7 +27,22 @@ const progressModalTableBody = document.getElementById('progress-modal-table-bod
 const progressFilterMonth = document.getElementById('progress-filter-month');
 const progressFilterYear = document.getElementById('progress-filter-year');
 const btnCloseProgressModal = document.getElementById('btn-close-progress');
+const btnToggleProgressEdit = document.getElementById('btn-toggle-progress-edit');
+const progressEditPanel = document.getElementById('progress-edit-panel');
+const progressEditDateLabel = document.getElementById('progress-edit-date-label');
+const progressEditNew = document.getElementById('progress-edit-new');
+const progressEditRev = document.getElementById('progress-edit-rev');
+const progressEditPresentBtn = document.getElementById('progress-edit-present');
+const progressEditAbsentBtn = document.getElementById('progress-edit-absent');
+const progressEditRemarks = document.getElementById('progress-edit-remarks');
+const progressEditHeardBy = document.getElementById('progress-edit-heard-by');
+const btnSaveProgressEdit = document.getElementById('btn-save-progress-edit');
+const btnCancelProgressEdit = document.getElementById('btn-cancel-progress-edit');
 let currentProgressStudentId = null;
+let currentProgressLogSnapshot = {};
+let currentProgressEditDateKey = null;
+let isProgressEditMode = false;
+let isProgressEditPresent = false;
 
 const btnAddStudent = document.getElementById('btn-add-student');
 const addStudentModal = document.getElementById('add-student-modal');
@@ -71,7 +86,7 @@ function loadDataFromDB() {
             snapshot.forEach((child) => {
                 loadedStudents.push({
                     id: child.key, name: child.val().name, pin: child.val().pin,
-                    isPresent: true, newPages: 0, rev: 0, remarks: "", revHeardBy: ""
+                    isPresent: false, newPages: 0, rev: 0, remarks: "", revHeardBy: ""
                 });
             });
         }
@@ -151,6 +166,87 @@ function getFilteredStudents() {
     return students.filter((student) => student.name.toLowerCase().includes(term));
 }
 
+function buildNumberSelectOptions(selectedValue = 0) {
+    return Array.from({ length: 1001 }, (_, value) => {
+        return `<option value="${value}" ${Number(selectedValue) === value ? 'selected' : ''}>${value}</option>`;
+    }).join('');
+}
+
+function formatProgressDateLabel(dateKey) {
+    const [year, month, day] = dateKey.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    return dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function updateProgressEditAttendanceUI() {
+    if (progressEditPresentBtn) {
+        progressEditPresentBtn.classList.toggle('active-p', isProgressEditPresent);
+    }
+    if (progressEditAbsentBtn) {
+        progressEditAbsentBtn.classList.toggle('active-a', !isProgressEditPresent);
+    }
+}
+
+function closeProgressEditPanel() {
+    if (progressEditPanel) progressEditPanel.classList.add('hidden');
+    currentProgressEditDateKey = null;
+    if (progressEditNew) progressEditNew.innerHTML = '';
+    if (progressEditRev) progressEditRev.innerHTML = '';
+    if (progressEditRemarks) progressEditRemarks.value = '';
+    if (progressEditHeardBy) progressEditHeardBy.value = '';
+}
+
+function openProgressEditPanel(dateKey) {
+    if (!currentProgressStudentId || !progressEditPanel || !progressEditNew || !progressEditRev) return;
+
+    const entry = currentProgressLogSnapshot[dateKey]?.[currentProgressStudentId] || {};
+    currentProgressEditDateKey = dateKey;
+    isProgressEditPresent = entry.isPresent === true;
+
+    progressEditDateLabel.innerText = `Editing ${formatProgressDateLabel(dateKey)}`;
+    progressEditNew.innerHTML = buildNumberSelectOptions(entry.newPages || 0);
+    progressEditRev.innerHTML = buildNumberSelectOptions(entry.rev || 0);
+    progressEditRemarks.value = entry.remarks || '';
+    progressEditHeardBy.value = entry.revHeardBy || '';
+    updateProgressEditAttendanceUI();
+    progressEditPanel.classList.remove('hidden');
+}
+
+function saveProgressEditPanel() {
+    if (!currentProgressStudentId || !currentProgressEditDateKey || !currentTeacherUid) return;
+
+    const payload = {
+        isPresent: isProgressEditPresent,
+        newPages: Math.max(0, Math.min(1000, Number(progressEditNew.value) || 0)),
+        rev: Math.max(0, Math.min(1000, Number(progressEditRev.value) || 0)),
+        remarks: progressEditRemarks.value.trim(),
+        revHeardBy: progressEditHeardBy.value.trim()
+    };
+
+    const logRef = ref(database, `teachers/${currentTeacherUid}/logs/${currentProgressEditDateKey}`);
+    update(logRef, {
+        [currentProgressStudentId]: payload
+    }).then(() => {
+        currentProgressLogSnapshot[currentProgressEditDateKey] = currentProgressLogSnapshot[currentProgressEditDateKey] || {};
+        currentProgressLogSnapshot[currentProgressEditDateKey][currentProgressStudentId] = payload;
+        const matchedStudent = students.find((item) => item.id === currentProgressStudentId);
+        if (matchedStudent && currentProgressEditDateKey === todayStr) {
+            matchedStudent.isPresent = payload.isPresent;
+            matchedStudent.newPages = payload.newPages;
+            matchedStudent.rev = payload.rev;
+            matchedStudent.revHeardBy = payload.revHeardBy;
+            matchedStudent.remarks = payload.remarks;
+            renderStudents();
+        }
+        closeProgressEditPanel();
+        loadStudentProgressReport(currentProgressStudentId);
+        showToast('Monthly progress updated successfully.', 'success');
+    }).catch((error) => {
+        console.error(error);
+        showToast('Unable to update monthly progress.', 'error');
+    });
+}
+
 function renderStudents() {
     const fragment = document.createDocumentFragment();
     const visibleStudents = getFilteredStudents();
@@ -194,19 +290,15 @@ function renderStudents() {
                 <div class="progress-row">
                     <div class="progress-item">
                         <span>New Pages</span>
-                        <div class="stepper-controls">
-                            <button type="button" data-action="new-minus" data-student-id="${student.id}">-</button>
-                            <span>${student.newPages}</span>
-                            <button type="button" data-action="new-plus" data-student-id="${student.id}">+</button>
-                        </div>
+                        <select class="page-select" data-action="new-pages" data-student-id="${student.id}" aria-label="New pages for ${student.name}">
+                            ${buildNumberSelectOptions(student.newPages || 0)}
+                        </select>
                     </div>
                     <div class="progress-item">
                         <span>Revision Pages</span>
-                        <div class="stepper-controls">
-                            <button type="button" data-action="rev-minus" data-student-id="${student.id}">-</button>
-                            <span>${student.rev}</span>
-                            <button type="button" data-action="rev-plus" data-student-id="${student.id}">+</button>
-                        </div>
+                        <select class="page-select" data-action="rev-pages" data-student-id="${student.id}" aria-label="Revision pages for ${student.name}">
+                            ${buildNumberSelectOptions(student.rev || 0)}
+                        </select>
                     </div>
                 </div>
                 <div class="heard-by-row">
@@ -255,20 +347,27 @@ studentListContainer.addEventListener('click', (e) => {
         renderStudents();
     } else if (action === 'delete') {
         openDeleteModal(studentId);
-    } else if (action === 'new-plus') {
-        student.newPages = Number(student.newPages || 0) + 1;
-        renderStudents();
-    } else if (action === 'new-minus') {
-        student.newPages = Math.max(0, Number(student.newPages || 0) - 1);
-        renderStudents();
-    } else if (action === 'rev-plus') {
-        student.rev = Number(student.rev || 0) + 1;
-        renderStudents();
-    } else if (action === 'rev-minus') {
-        student.rev = Math.max(0, Number(student.rev || 0) - 1);
-        renderStudents();
     } else if (action === 'monthly-progress') {
         openStudentProgressModal(studentId);
+    }
+});
+
+studentListContainer.addEventListener('change', (e) => {
+    const selectEl = e.target.closest('[data-action="new-pages"]');
+    if (selectEl) {
+        const student = students.find((item) => item.id === selectEl.dataset.studentId);
+        if (student) {
+            student.newPages = Math.max(0, Math.min(1000, Number(selectEl.value) || 0));
+        }
+        return;
+    }
+
+    const revSelectEl = e.target.closest('[data-action="rev-pages"]');
+    if (revSelectEl) {
+        const student = students.find((item) => item.id === revSelectEl.dataset.studentId);
+        if (student) {
+            student.rev = Math.max(0, Math.min(1000, Number(revSelectEl.value) || 0));
+        }
     }
 });
 
@@ -311,6 +410,12 @@ function closeStudentProgressModal() {
     if (!studentProgressModal) return;
     studentProgressModal.classList.add('hidden');
     currentProgressStudentId = null;
+    isProgressEditMode = false;
+    if (btnToggleProgressEdit) {
+        btnToggleProgressEdit.innerText = 'Edit';
+        btnToggleProgressEdit.classList.remove('active-p');
+    }
+    closeProgressEditPanel();
 }
 
 function loadStudentProgressReport(studentId) {
@@ -318,17 +423,17 @@ function loadStudentProgressReport(studentId) {
     const month = progressFilterMonth.value;
     const year = progressFilterYear.value;
     const prefix = `${year}-${month}`;
-    progressModalTableBody.innerHTML = '<tr><td colspan="7" style="padding:16px; color:#888;">Loading monthly data...</td></tr>';
+    progressModalTableBody.innerHTML = '<tr><td colspan="8" style="padding:16px; color:#888;">Loading monthly data...</td></tr>';
 
     get(ref(database, `teachers/${currentTeacherUid}/logs`)).then((snap) => {
         const rows = [];
         if (snap.exists()) {
-            const logs = snap.val();
-            Object.keys(logs)
+            currentProgressLogSnapshot = snap.val();
+            Object.keys(currentProgressLogSnapshot)
                 .filter(dateKey => dateKey.startsWith(prefix))
                 .sort((a, b) => b.localeCompare(a))
                 .forEach((dateKey) => {
-                    const entry = logs[dateKey][studentId];
+                    const entry = currentProgressLogSnapshot[dateKey]?.[studentId];
                     if (entry) {
                         rows.push({
                             date: dateKey,
@@ -341,10 +446,12 @@ function loadStudentProgressReport(studentId) {
                         });
                     }
                 });
+        } else {
+            currentProgressLogSnapshot = {};
         }
 
         if (rows.length === 0) {
-            progressModalTableBody.innerHTML = '<tr><td colspan="7" style="padding:16px; color:#888;">No data found for this month.</td></tr>';
+            progressModalTableBody.innerHTML = '<tr><td colspan="8" style="padding:16px; color:#888;">No data found for this month.</td></tr>';
             return;
         }
 
@@ -353,9 +460,17 @@ function loadStudentProgressReport(studentId) {
             const [yearStr, monthStr, dayStr] = row.date.split('-');
             const dateObj = new Date(Number(yearStr), Number(monthStr) - 1, Number(dayStr));
             const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+            const editButtonMarkup = isProgressEditMode
+                ? `<button type="button" class="icon-btn" data-action="edit-progress-row" data-date="${row.date}" title="Edit ${formattedDate}" style="padding:4px 7px; font-size:11px; line-height:1; background:#eef2ff; color:#1d4ed8;">✎</button>`
+                : '';
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="sticky-col" style="font-size:11px;">${formattedDate}</td>
+                <td class="sticky-col" style="font-size:11px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        ${editButtonMarkup}
+                        <span>${formattedDate}</span>
+                    </div>
+                </td>
                 <td>${row.newPages || ''}</td>
                 <td>${row.rev || ''}</td>
                 <td style="color:#137333; font-weight:bold;">${row.present}</td>
@@ -367,12 +482,58 @@ function loadStudentProgressReport(studentId) {
         });
     }).catch((err) => {
         console.error(err);
-        progressModalTableBody.innerHTML = '<tr><td colspan="7" style="padding:16px; color:#888;">Unable to load monthly data.</td></tr>';
+        progressModalTableBody.innerHTML = '<tr><td colspan="8" style="padding:16px; color:#888;">Unable to load monthly data.</td></tr>';
     });
 }
 
 if (btnCloseProgressModal) {
     btnCloseProgressModal.addEventListener('click', closeStudentProgressModal);
+}
+
+if (btnToggleProgressEdit) {
+    btnToggleProgressEdit.addEventListener('click', () => {
+        isProgressEditMode = !isProgressEditMode;
+        if (btnToggleProgressEdit) {
+            btnToggleProgressEdit.innerText = isProgressEditMode ? 'Done' : 'Edit';
+            btnToggleProgressEdit.classList.toggle('active-p', isProgressEditMode);
+        }
+        if (!isProgressEditMode) {
+            closeProgressEditPanel();
+        }
+        if (currentProgressStudentId) {
+            loadStudentProgressReport(currentProgressStudentId);
+        }
+    });
+}
+
+if (progressEditPresentBtn) {
+    progressEditPresentBtn.addEventListener('click', () => {
+        isProgressEditPresent = true;
+        updateProgressEditAttendanceUI();
+    });
+}
+
+if (progressEditAbsentBtn) {
+    progressEditAbsentBtn.addEventListener('click', () => {
+        isProgressEditPresent = false;
+        updateProgressEditAttendanceUI();
+    });
+}
+
+if (btnSaveProgressEdit) {
+    btnSaveProgressEdit.addEventListener('click', saveProgressEditPanel);
+}
+
+if (btnCancelProgressEdit) {
+    btnCancelProgressEdit.addEventListener('click', closeProgressEditPanel);
+}
+
+if (progressModalTableBody) {
+    progressModalTableBody.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="edit-progress-row"]');
+        if (!editBtn) return;
+        openProgressEditPanel(editBtn.dataset.date);
+    });
 }
 
 if (progressFilterMonth) {
@@ -479,7 +640,7 @@ if (addStudentForm) {
                 return set(newStudentRef, { name: nameVal, pin: pinVal });
             })
             .then(() => {
-                students.push({ id: idVal, name: nameVal, pin: pinVal, isPresent: true, newPages: 0, rev: 0, remarks: "" });
+                students.push({ id: idVal, name: nameVal, pin: pinVal, isPresent: false, newPages: 0, rev: 0, remarks: "" });
                 resetAddForm();
                 addStudentModal.classList.add('hidden');
                 renderStudents();
