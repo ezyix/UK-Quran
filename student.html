@@ -66,26 +66,22 @@
         <div class="attendance-toggle-row">
             <span class="stepper-label">Mark Attendance Today</span>
             <div class="toggle-p-a">
-                <button type="button" id="btn-mark-present" class="active-p">Present</button>
-                <button type="button" id="btn-mark-absent">Absent</button>
+                <button type="button" id="btn-mark-present">Present</button>
+                <button type="button" id="btn-mark-absent" class="active-a">Absent</button>
             </div>
         </div>
 
         <div class="stepper-row">
             <span class="stepper-label">New Pages</span>
             <div class="stepper-controls">
-                <button type="button" id="btn-new-minus">-</button>
-                <input type="number" id="inp-new" value="0" readonly>
-                <button type="button" id="btn-new-plus">+</button>
+                <select id="inp-new" class="page-select" aria-label="New pages"></select>
             </div>
         </div>
 
         <div class="stepper-row">
             <span class="stepper-label">Revision Pages</span>
             <div class="stepper-controls">
-                <button type="button" id="btn-rev-minus">-</button>
-                <input type="number" id="inp-rev" value="0" readonly>
-                <button type="button" id="btn-rev-plus">+</button>
+                <select id="inp-rev" class="page-select" aria-label="Revision pages"></select>
             </div>
         </div>
         <div class="heard-by-row">

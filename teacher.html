@@ -125,10 +125,13 @@
 
     <!-- Student Monthly Progress Modal -->
     <div id="student-progress-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 420px; width: 95%;">
+        <div class="modal-content" style="max-width: 680px; width: 95%;">
             <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px;">
                 <h3 id="progress-modal-title">Monthly Progress</h3>
-                <button type="button" class="icon-btn" id="btn-close-progress" title="Close" style="background: transparent; border: none; color:#8E785C; font-size:18px;">×</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn-outline" id="btn-toggle-progress-edit" title="Enable editing" style="padding:8px 12px; font-size:12px;">Edit</button>
+                    <button type="button" class="icon-btn" id="btn-close-progress" title="Close" style="background: transparent; border: none; color:#8E785C; font-size:18px;">×</button>
+                </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
                 <div>
@@ -176,6 +179,49 @@
                         <tr><td colspan="7" style="padding:16px; color:#888;">Select a student and month to view progress.</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="progress-date-edit-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 460px; width: 95%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+                <h3 id="progress-edit-modal-title">Edit Daily Progress</h3>
+                <button type="button" class="icon-btn" id="btn-close-progress-edit" title="Close" style="background: transparent; border: none; color:#8E785C; font-size:18px;">×</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">Date</label>
+                    <div id="progress-edit-date-label" style="padding:10px 12px; border-radius:10px; border:1px solid #ddd; background:#fff; font-weight:600; color:#1f2937;">Select a date</div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">New </label>
+                        <select id="progress-edit-new" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-family:inherit;"></select>
+                    </div>
+                    <div>
+                        <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">Rev</label>
+                        <select id="progress-edit-rev" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-family:inherit;"></select>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">Attendance</label>
+                    <div class="toggle-p-a" style="display:flex; gap:8px;">
+                        <button type="button" id="progress-edit-present" class="btn-outline" style="flex:1;">Present</button>
+                        <button type="button" id="progress-edit-absent" class="btn-outline" style="flex:1;">Absent</button>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">Revision heard by</label>
+                    <input id="progress-edit-heard-by" type="text" placeholder="Enter name" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-family:inherit; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">Remarks</label>
+                    <input id="progress-edit-remarks" type="text" placeholder="Enter remarks" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-family:inherit; box-sizing:border-box;">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:4px;">
+                    <button style="background: #146c43;color: white;" type="button" class="btn-primary" id="btn-save-progress-edit">Save Changes</button>
+                </div>
             </div>
         </div>
     </div>
