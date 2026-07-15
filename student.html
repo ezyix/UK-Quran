@@ -27,6 +27,15 @@
         .heard-by-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f3f3f3; }
         .heard-by-row label { min-width: 90px; color: #4b5563; font-size: 13px; font-weight: 600; }
         .heard-by-row input { flex: 1 1 100%; max-width: 100%; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 12px; font-size: 14px; color: #111827; }
+        .dropdown-wrapper { position: relative; }
+        .menu-btn { font-size: 22px; line-height: 1; width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; color: #8E785C; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { background: rgba(142, 120, 92, 0.08); }
+        .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 130px; background: white; border: 1px solid #e6e6e6; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; z-index: 20; }
+        .dropdown-menu.hidden { display: none; }
+        .dropdown-menu button { width: 100%; display: block; padding: 12px 14px; border: none; background: transparent; text-align: left; color: #333; font-weight: 600; cursor: pointer; }
+        .dropdown-menu button:hover { background: #f7f7f7; }
+        #btn-menu-logout { color: #b71c1c; background: rgba(183, 28, 28, 0.05); }
+        #btn-menu-logout:hover { background: rgba(183, 28, 28, 0.12); }
     </style>
 </head>
 <body>
@@ -45,9 +54,12 @@
             </div>
         </div>
         <div class="header-actions">
-            <button class="icon-btn" id="btn-logout" title="Logout">
-                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"></path></svg>
-            </button> 
+            <div class="dropdown-wrapper">
+                <button class="menu-btn" id="btn-menu" aria-label="Open menu">⋮</button>
+                <div class="dropdown-menu hidden" id="student-dropdown-menu">
+                    <button type="button" id="btn-menu-logout">Logout</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -92,29 +104,38 @@
         <button class="btn-primary" id="btn-submit-progress" style="width: 100%; background:  #47c845;">Submit Progress</button>
     </div>
 
-    <!-- Monthly History Table -->
-    <div class="greeting" style="padding-top: 0;">
-        <h1 style="font-size: 18px;">Monthly Progress</h1>
-    </div>
-    
-    <div class="table-container" style="margin-bottom: 40px;">
-        <table class="excel-table">
-            <thead>
-                <tr>
-                    <th class="th-blue sticky-col">Date</th>
-                    <th class="th-blue">New</th>
-                    <th class="th-blue">Rev</th>
-                    <th class="th-blue">Present</th>
-                    <th class="th-blue">Absent</th>
-                    <th class="th-blue">Teacher Remarks</th>
-                </tr>
-            </thead>
-            <tbody id="history-table-body">
-                <!-- Javascript will inject history here -->
-            </tbody>
-        </table>
-    </div>
+    <div class="student-action-row">
+        <button class="btn-square" id="btn-view-monthly-progress" type="button">Monthly Progress</button>
+        <button class="btn-square btn-secondary" id="btn-open-thajweed" type="button">Thajweed</button>
+    </div>    
 
+</div>
+
+<!-- Monthly Progress Modal -->
+<div id="modal-monthly-progress" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:18px;">Monthly Progress</h3>
+            <button type="button" id="btn-close-monthly-progress" class="icon-btn" style="border:none; background:transparent; font-size:24px; line-height:1;">×</button>
+        </div>
+        <div style="max-height:60vh; overflow:auto;">
+            <table class="excel-table" style="width:100%; margin-top:0;">
+                <thead>
+                    <tr>
+                        <th class="th-blue sticky-col">Date</th>
+                        <th class="th-blue">New</th>
+                        <th class="th-blue">Rev</th>
+                        <th class="th-blue">Present</th>
+                        <th class="th-blue">Absent</th>
+                        <th class="th-blue">Teacher Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-history-table-body">
+                    <!-- Javascript will inject history here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Toast Notification Container -->
