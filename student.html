@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Student Specific Styles */
+        .greeting { padding: 20px 20px 0; }
+        .greeting h1 { color:#5C4B37; font-size: 22px; margin: 0 0 5px; }
+        .greeting p { color: var(--text-muted); font-size: 13px; margin: 0; }
+        
+        .student-action-card { background: var(--white); margin: 20px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px;}
+        
+        .stepper-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f4f5f7; padding: 10px; border-radius: 12px;}
+        .stepper-label { font-weight: 600; font-size: 14px; color: #333; }
+        .stepper-controls { display: flex; align-items: center; gap: 10px; }
+        .stepper-controls button { width: 35px; height: 35px; border-radius: 50%; border: none; background: white; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: var(--primary-orange);}
+        .stepper-controls input { width: 40px; text-align: center; border: none; background: transparent; font-size: 18px; font-weight: bold; margin: 0; padding: 0; pointer-events: none;}
+        
+        .attendance-toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; border: 1px solid #eaeaea; border-radius: 12px; }
+        .toggle-btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; background: #f1f3f4; color: #888; transition: 0.2s;}
+        .toggle-btn.active { background: #34A853; color: white; }
+        .heard-by-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f3f3f3; }
+        .heard-by-row label { min-width: 90px; color: #4b5563; font-size: 13px; font-weight: 600; }
+        .heard-by-row input { flex: 1 1 100%; max-width: 100%; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 12px; font-size: 14px; color: #111827; }
+        .dropdown-wrapper { position: relative; }
+        .menu-btn { font-size: 22px; line-height: 1; width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; color: #8E785C; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { background: rgba(142, 120, 92, 0.08); }
+        .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 130px; background: white; border: 1px solid #e6e6e6; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; z-index: 20; }
+        .dropdown-menu.hidden { display: none; }
+        .dropdown-menu button { width: 100%; display: block; padding: 12px 14px; border: none; background: transparent; text-align: left; color: #333; font-weight: 600; cursor: pointer; }
+        .dropdown-menu button:hover { background: #f7f7f7; }
+        #btn-menu-logout { color: #b71c1c; background: rgba(183, 28, 28, 0.05); }
+        #btn-menu-logout:hover { background: rgba(183, 28, 28, 0.12); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="user-info">
+            <div class="avatar" style="background: #4A90E2;">
+            <img src="logo.webp" alt="logo" height="55px" width="55px" style="border-radius: 100px;  margin: white;">
+            </div>
+            <div>
+                <h2 id="student-header-name">Loading...</h2>
+                <p id="student-header-id">ID: ...</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="dropdown-wrapper">
+                <button class="menu-btn" id="btn-menu" aria-label="Open menu">⋮</button>
+                <div class="dropdown-menu hidden" id="student-dropdown-menu">
+                    <button type="button" id="btn-menu-logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="greeting">
+        <h1 id="greeting-text">Assalaamu Alaikum..</h1>
+        <p id="current-month-text">Submit your progress for today.</p>
+    </div>
+
+    <!-- Daily Entry Card -->
+    <div class="student-action-card">
+        <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Today's Learning
+        </h3>
+        
+        <div class="attendance-toggle-row">
+            <span class="stepper-label">Mark Attendance Today</span>
+            <div class="toggle-p-a">
+                <button type="button" id="btn-mark-present">Present</button>
+                <button type="button" id="btn-mark-absent" class="active-a">Absent</button>
+            </div>
+        </div>
+
+        <div class="stepper-row">
+            <span class="stepper-label">New Pages</span>
+            <div class="stepper-controls">
+                <select id="inp-new" class="page-select" aria-label="New pages"></select>
+            </div>
+        </div>
+
+        <div class="stepper-row">
+            <span class="stepper-label">Revision Pages</span>
+            <div class="stepper-controls">
+                <select id="inp-rev" class="page-select" aria-label="Revision pages"></select>
+            </div>
+        </div>
+        <div class="heard-by-row">
+            <label for="inp-rev-heard-by">Heard by</label>
+            <input type="text" id="inp-rev-heard-by" placeholder="Enter name">
+        </div>
+
+        <button class="btn-primary" id="btn-submit-progress" style="width: 100%; ; color: #fff;">Submit Progress</button>
+    </div>
+
+    <div class="student-action-row">
+        <button class="btn-square1" id="btn-view-monthly-progress" type="button">Progress</button>
+    </div>    
+    <div class="student-action-row">
+        <button style="color: black; background-image: url(lesson-1-banner.webp); background-size: 100% 100%;" class="btn-square btn-secondary" id="btn-open-thajweed" type="button">Thajweed</button>
+    </div>   
+    <div class="student-action-row">
+        <button class="btn-square3" id="btn-view-monthly-progress" type="button">Quran</button>
+    </div>          
+
+</div>
+
+<!-- Monthly Progress Modal -->
+<div id="modal-monthly-progress" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:18px;">Monthly Progress</h3>
+            <button type="button" id="btn-close-monthly-progress" class="icon-btn" style="border:none; background:transparent; font-size:24px; line-height:1;">×</button>
+        </div>
+        <div style="max-height:60vh; overflow:auto;">
+            <table class="excel-table" style="width:100%; margin-top:0;">
+                <thead>
+                    <tr>
+                        <th class="th-blue sticky-col">Date</th>
+                        <th class="th-blue">New</th>
+                        <th class="th-blue">Rev</th>
+                        <th class="th-blue">Present</th>
+                        <th class="th-blue">Absent</th>
+                        <th class="th-blue">Teacher Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-history-table-body">
+                    <!-- Javascript will inject history here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module" src="student.js"></script>
+</body>
+</html>
