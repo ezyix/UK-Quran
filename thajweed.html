@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THAJWEED CLASS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+.video-list { 
+  display: flex; 
+  flex-direction: row; 
+  flex-wrap: wrap; 
+  gap: 15px; 
+  margin-top: 10px; 
+ 
+} 
+@media (max-width: 320px) {
+  .video-list {
+  display: flex; 
+  flex-direction: row; 
+  flex-wrap: wrap; 
+  margin-top: 10px; 
+  gap: 0px; 
+  }
+  }
+
+
+  
+        .video-card { width: 37%; display: flex; flex-direction: column; gap: 10px; background: #ffffff; border-radius: 18px; padding: 18px; box-shadow: 0 14px 35px rgba(0,0,0,0.08); }
+        .video-card-row { display: flex; flex-direction: column; gap: 12px;justify-content: flex-start; }
+        .video-thumb { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; display: block; }
+        .thumb-wrap { position: relative; width: 100%; max-width: 230px; }
+        .play-overlay { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .play-overlay svg { width: 24px; height: 24px; fill: #fff; }
+        .student-action-card { background: white; margin: 10px; border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .lesson-1{background-image: url(lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px;}
+        .student-action-card h3 { cursor: pointer; }
+        .student-action-card .video-list { display: none; }
+        .student-action-card.open .video-list { display: flex; }
+        
+
+        /* Modal (lightbox) */
+        .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); z-index: 1000; }
+        .modal.open { display: flex; }
+        .modal-content { position: relative; width: 90%; max-width: 920px; }
+        .modal-img { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .modal-close { position: absolute; right: -12px; top: -12px; width: 36px; height: 36px; background: #fff; border-radius: 50%; display:flex;align-items:center;justify-content:center;cursor:pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+        .modal-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 64px; height: 64px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .modal-play svg { width: 32px; height: 32px; fill: #fff; }
+        .modal video { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .video-player { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .video-meta { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
+        .video-title { font-size: 14px; font-weight: 700; color: #1f2937; line-height: 1.4; }
+        .video-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+        .video-link { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; background: #4A90E2; color: #fff; border-radius: 14px; text-decoration: none; font-size: 13px; font-weight: 700; transition: background 0.2s ease; }
+        .video-link:hover { background: #146acd; }
+        .video-help { margin: 0; color: #6b7280; font-size: 13px; padding: 0 20px 10px; }
+        .video-count { color: #4A90E2; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="dash-header">
+            <div class="user-info">
+                <div>
+                    <h2 style="margin:0;">THAJWEED CLASS</h2>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="btn-back" type="button" aria-label="Go back">←</button>
+            </div>
+        </header>
+    <div class="student-action-card">
+        <div class="lesson-1">
+        <h3 style="margin-left: 22px; margin-top: 20px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Lesson 1
+        </h3>
+        <p style="margin-left: 22px; margin-right: 22px; font-size: 14px;">
+            Arabic letters
+        </p>
+        </div>
+        
+        <div class="video-list" id="video-list"></div> 
+    </div> 
+    <script> 
+        const videoFiles = [
+            'PART- 1.mp4',
+            'PART- 2.mp4',
+            'PART- 3.mp4',
+            'PART- 4.mp4',
+            'PART- 5.mp4',
+            'PART- 6.mp4',
+            'PART- 7.mp4',
+            'PART- 8.mp4',
+            'PART- 9.mp4',
+            'PART- 10.mp4',
+            'PART- 11.mp4',
+            'PART- 12.mp4',
+            'PART- 13.mp4',
+            'PART- 14.mp4',
+            'PART- 15.mp4',
+            'PART- 16.mp4',
+            'PART- 17.mp4',
+            'PART- 18.mp4',
+            'PART- 19.mp4',
+            'PART- 20.mp4',
+            'PART- 21.mp4',
+            'PART- 22.mp4',
+            'PART- 23.mp4',
+            'PART- 24.mp4',
+            'PART- 25.mp4',
+            'PART- 26.mp4',
+            'PART- 27.mp4',
+            'PART- 28.mp4'
+        ];
+
+        function extractPartNumber(name) {
+            const match = name.match(/PART\s*-?\s*(\d+)/i);
+            return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
+        }
+
+        videoFiles.sort((a, b) => {
+            const diff = extractPartNumber(a) - extractPartNumber(b);
+            return diff !== 0 ? diff : a.localeCompare(b, undefined, { sensitivity: 'base' });
+        });
+
+        const videoList = document.getElementById('video-list');
+        const defaultThumb = 'images/arabic-letters/PART- 2.webp';
+        const thumbSrc = (partNum) => `images/arabic-letters/PART- ${partNum}.webp`;
+
+        videoFiles.forEach((fileName, index) => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+
+            const row = document.createElement('div');
+            row.className = 'video-card-row';
+
+            const partNum = extractPartNumber(fileName);
+            const thumb = document.createElement('img');
+            thumb.className = 'video-thumb';
+            thumb.src = partNum !== Number.MAX_SAFE_INTEGER ? thumbSrc(partNum) : defaultThumb;
+            thumb.alt = 'Thumbnail for part ' + (index + 1);
+            thumb.onerror = () => {
+                thumb.onerror = null;
+                thumb.src = defaultThumb;
+            };
+
+                const thumbWrap = document.createElement('div');
+                thumbWrap.className = 'thumb-wrap';
+                thumbWrap.appendChild(thumb);
+
+            const title = document.createElement('div');
+            title.className = 'video-title';
+            if (partNum !== Number.MAX_SAFE_INTEGER) {
+                title.textContent = `Class - ${partNum}`;
+            } else {
+                title.textContent = `Class - ${index + 1}`;
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'video-meta';
+            meta.appendChild(title);
+
+            // open modal on card click; modal will show play overlay and handle playback
+            thumb.addEventListener('click', () => openModal(fileName, thumb.src));
+            // also open when clicking card area
+            card.addEventListener('click', (e) => {
+                // avoid double-open if clicking interactive elements later
+                if (e.target === card) openModal(fileName, thumb.src);
+            });
+
+            row.appendChild(thumbWrap);
+            row.appendChild(meta);
+            card.appendChild(row);
+            videoList.appendChild(card);
+        });
+
+        document.getElementById('btn-back').addEventListener('click', () => {
+            window.location.href = 'student.html';
+        });
+
+        // make lesson cards collapsible; start closed by default
+        (function setupLessonCollapse(){
+            const cards = document.querySelectorAll('.student-action-card');
+            cards.forEach((card) => {
+                const header = card.querySelector('h3');
+                if (!header) return;
+                header.addEventListener('click', () => card.classList.toggle('open'));
+            });
+        })();
+
+        // --- Modal creation and behavior ---
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-close">✕</div>
+                <img class="modal-img" src="" alt="thumbnail" />
+                <div class="modal-play"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const modalContent = modal.querySelector('.modal-content');
+        const modalImg = modal.querySelector('.modal-img');
+        const modalPlay = modal.querySelector('.modal-play');
+        const modalClose = modal.querySelector('.modal-close');
+
+        function openModal(fileName, thumbSrc) {
+            // reset content
+            // remove existing video if any
+            const existingVideo = modalContent.querySelector('video');
+            if (existingVideo) existingVideo.remove();
+            modalImg.src = thumbSrc;
+            modalImg.style.display = 'block';
+            modalPlay.style.display = 'flex';
+            modal.dataset.file = fileName;
+            modal.classList.add('open');
+        }
+
+        function closeModal() {
+            // stop and remove video if playing
+            const v = modalContent.querySelector('video');
+            if (v) {
+                try { v.pause(); } catch (e) {}
+                v.remove();
+            }
+            modal.classList.remove('open');
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        modalPlay.addEventListener('click', () => {
+            const fileName = modal.dataset.file;
+            if (!fileName) return;
+            // replace image with video element
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            video.src = 'videos/arabic-letters/' + encodeURIComponent(fileName);
+            // insert before modalPlay, then hide modalImg and modalPlay
+            modalContent.insertBefore(video, modalPlay);
+            modalImg.style.display = 'none';
+            modalPlay.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
