@@ -122,6 +122,11 @@ body::before {
     background: black;
     font-size: 28px;
 }
+        .lesson-1{background-image: url(lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px;}
+        .student-action-card h3 { cursor: pointer; }
+        .student-action-card { background: white; margin: 10px; border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .qiraat{background-image: url(banner-2-reverse.jpg);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
 
 .role-toggle {
     display: flex;
