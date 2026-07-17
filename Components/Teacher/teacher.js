@@ -17,9 +17,13 @@ const toastContainer = document.getElementById('toast-container');
 
 const btnMarkAll = document.getElementById('btn-mark-all');
 const btnMenu = document.getElementById('btn-menu');
-const teacherMenuDropdown = document.getElementById('teacher-dropdown-menu');
-const btnMenuLogout = document.getElementById('btn-menu-logout');
+const teacherMenuBackdrop = document.getElementById('teacher-menu-backdrop');
+const teacherSideMenu = document.getElementById('teacher-side-menu');
+const btnMenuClose = document.getElementById('btn-menu-close');
+const btnMenuHome = document.getElementById('btn-menu-home');
 const btnMenuCertGenerator = document.getElementById('btn-menu-cert-generator');
+const btnMenuReport = document.getElementById('btn-menu-report');
+const btnMenuLogout = document.getElementById('btn-menu-logout');
 const btnSaveReport = document.getElementById('btn-save-report');
 const btnSaveLabel = document.getElementById('btn-save-label');
 const btnViewReports = document.getElementById('btn-view-reports');
@@ -629,18 +633,28 @@ if (progressFilterYear) {
 
 // 5. Basic Button Listeners
 if (btnMarkAll) btnMarkAll.addEventListener('click', () => { students.forEach(s => s.isPresent = true); renderStudents(); });
-if (btnMenu && teacherMenuDropdown) {
-    btnMenu.addEventListener('click', () => {
-        teacherMenuDropdown.classList.toggle('hidden');
+if (btnMenu && teacherMenuBackdrop && teacherSideMenu) {
+    const closeTeacherMenu = () => {
+        teacherSideMenu.classList.remove('open');
+        teacherMenuBackdrop.classList.remove('open');
+        teacherSideMenu.setAttribute('aria-hidden', 'true');
+    };
+    const openTeacherMenu = () => {
+        teacherSideMenu.classList.add('open');
+        teacherMenuBackdrop.classList.add('open');
+        teacherSideMenu.setAttribute('aria-hidden', 'false');
+    };
+    btnMenu.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openTeacherMenu();
     });
-    document.addEventListener('click', (event) => {
-        if (!btnMenu.contains(event.target) && !teacherMenuDropdown.contains(event.target)) {
-            teacherMenuDropdown.classList.add('hidden');
-        }
-    });
+    btnMenuClose?.addEventListener('click', closeTeacherMenu);
+    teacherMenuBackdrop?.addEventListener('click', closeTeacherMenu);
 }
-if (btnMenuLogout) btnMenuLogout.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '../../index.html'); });
-if (btnMenuCertGenerator) btnMenuCertGenerator.addEventListener('click', () => { window.location.href = '../Certificate-Generator/certificategenerator.html'; });
+if (btnMenuHome) btnMenuHome.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = 'teacher.html'; });
+if (btnMenuCertGenerator) btnMenuCertGenerator.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = '../Certificate-Generator/certificategenerator.html'; });
+if (btnMenuReport) btnMenuReport.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = '../Report/reports.html'; });
+if (btnMenuLogout) btnMenuLogout.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); signOut(auth).then(() => window.location.href = '../../index.html'); });
 if (btnViewReports) btnViewReports.addEventListener('click', () => window.location.href = '../Report/reports.html');
 
 // --- 6. ADD STUDENT (creates real Auth account + duplicate check) ---

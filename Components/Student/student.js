@@ -21,7 +21,12 @@ const btnOpenThajweed = document.getElementById('btn-open-thajweed');
 const monthlyModal = document.getElementById('modal-monthly-progress');
 const btnCloseMonthly = document.getElementById('btn-close-monthly-progress');
 const btnMenu = document.getElementById('btn-menu');
-const menuDropdown = document.getElementById('student-dropdown-menu');
+const studentMenuBackdrop = document.getElementById('student-menu-backdrop');
+const studentSideMenu = document.getElementById('student-side-menu');
+const btnMenuClose = document.getElementById('btn-menu-close');
+const btnMenuHome = document.getElementById('btn-menu-home');
+const btnMenuThajweed = document.getElementById('btn-menu-thajweed');
+const btnMenuQiraat = document.getElementById('btn-menu-qiraat');
 const btnMenuLogout = document.getElementById('btn-menu-logout');
 
 function lockBodyScroll() {
@@ -299,26 +304,50 @@ btnSubmit.addEventListener('click', () => {
     });
 });
 
-// --- 5. LOGOUT ---
-if (btnMenu) {
+// --- 5. MENU ---
+if (btnMenu && studentMenuBackdrop && studentSideMenu) {
+    const closeStudentMenu = () => {
+        studentSideMenu.classList.remove('open');
+        studentMenuBackdrop.classList.remove('open');
+        studentSideMenu.setAttribute('aria-hidden', 'true');
+    };
+    const openStudentMenu = () => {
+        studentSideMenu.classList.add('open');
+        studentMenuBackdrop.classList.add('open');
+        studentSideMenu.setAttribute('aria-hidden', 'false');
+    };
     btnMenu.addEventListener('click', (event) => {
         event.stopPropagation();
-        if (menuDropdown) menuDropdown.classList.toggle('hidden');
+        openStudentMenu();
+    });
+    btnMenuClose?.addEventListener('click', closeStudentMenu);
+    studentMenuBackdrop?.addEventListener('click', closeStudentMenu);
+}
+if (btnMenuHome) {
+    btnMenuHome.addEventListener('click', () => {
+        studentSideMenu.classList.remove('open');
+        studentMenuBackdrop.classList.remove('open');
+        window.location.href = 'student.html';
     });
 }
-
+if (btnMenuThajweed) {
+    btnMenuThajweed.addEventListener('click', () => {
+        studentSideMenu.classList.remove('open');
+        studentMenuBackdrop.classList.remove('open');
+        window.location.href = '../Thajweed/thajweed.html';
+    });
+}
+if (btnMenuQiraat) {
+    btnMenuQiraat.addEventListener('click', () => {
+        studentSideMenu.classList.remove('open');
+        studentMenuBackdrop.classList.remove('open');
+        window.location.href = '../Qira\'at/qiraat.html';
+    });
+}
 if (btnMenuLogout) {
     btnMenuLogout.addEventListener('click', () => {
-        if (menuDropdown) menuDropdown.classList.add('hidden');
+        studentSideMenu.classList.remove('open');
+        studentMenuBackdrop.classList.remove('open');
         signOut(auth).then(() => window.location.href = '../../index.html');
-    });
-}
-
-if (document.body) {
-    document.body.addEventListener('click', (event) => {
-        if (!btnMenu || !menuDropdown) return;
-        if (event.target === btnMenu || btnMenu.contains(event.target)) return;
-        if (event.target === menuDropdown || menuDropdown.contains(event.target)) return;
-        menuDropdown.classList.add('hidden');
     });
 }

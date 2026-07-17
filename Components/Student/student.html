@@ -27,15 +27,18 @@
         .heard-by-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f3f3f3; }
         .heard-by-row label { min-width: 90px; color: #4b5563; font-size: 13px; font-weight: 600; }
         .heard-by-row input { flex: 1 1 100%; max-width: 100%; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 12px; font-size: 14px; color: #111827; }
-        .dropdown-wrapper { position: relative; }
-        .menu-btn { font-size: 22px; line-height: 1; width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; color: #8E785C; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .menu-btn:hover { background: rgba(142, 120, 92, 0.08); }
-        .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 130px; background: white; border: 1px solid #e6e6e6; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; z-index: 20; }
-        .dropdown-menu.hidden { display: none; }
-        .dropdown-menu button { width: 100%; display: block; padding: 12px 14px; border: none; background: transparent; text-align: left; color: #333; font-weight: 600; cursor: pointer; }
-        .dropdown-menu button:hover { background: #f7f7f7; }
-        #btn-menu-logout { color: #b71c1c; background: rgba(183, 28, 28, 0.05); }
-        #btn-menu-logout:hover { background: rgba(183, 28, 28, 0.12); }
+        .menu-btn { font-size: 22px; line-height: 1; width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; color: #111; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { background: rgba(0, 0, 0, 0.05); }
+        .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.24); opacity: 0; visibility: hidden; transition: opacity 0.28s ease; z-index: 1050; }
+        .menu-backdrop.open { opacity: 1; visibility: visible; }
+        .side-menu { position: fixed; top: 0; right: -100%; width: 60vw; max-width: 340px; height: 100vh; background: #fff; box-shadow: -18px 0 45px rgba(0,0,0,0.12); z-index: 1100; transition: right 0.28s ease; display: flex; flex-direction: column; padding: 32px 32px 28px; }
+        .side-menu.open { right: 0; }
+        .side-menu .menu-close-btn { margin-left: auto; border: none; background: transparent; font-size: 28px; line-height: 1; color: #333; cursor: pointer; }
+        .side-menu .menu-title { margin: 0; font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; font-weight: 700; }
+        .side-menu .menu-list { margin-top: 48px; display: flex; flex-direction: column; gap: 28px; }
+        .side-menu .menu-list button { border: none; background: transparent; text-align: left; color: #111; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; padding: 0; cursor: pointer; }
+        .side-menu .menu-list button + button { padding-top: 28px; border-top: 1px solid rgba(0,0,0,0.08); }
+        .side-menu .menu-list button:hover { color: #0f4ad6; }
     </style>
 </head>
 <body>
@@ -54,13 +57,21 @@
             </div>
         </div>
         <div class="header-actions">
-            <div class="dropdown-wrapper">
-                <button class="menu-btn" id="btn-menu" aria-label="Open menu">⋮</button>
-                <div class="dropdown-menu hidden" id="student-dropdown-menu">
-                    <button type="button" id="btn-menu-logout">Logout</button>
-                </div>
-            </div>
+            <button class="menu-btn" id="btn-menu" aria-label="Open menu">☰</button>
         </div>
+    </header>
+
+    <div id="student-menu-backdrop" class="menu-backdrop"></div>
+    <aside id="student-side-menu" class="side-menu" aria-hidden="true">
+        <button type="button" class="menu-close-btn" id="btn-menu-close">×</button>
+        <p class="menu-title">UK QURAN</p>
+        <div class="menu-list">
+            <button type="button" id="btn-menu-home">HOME</button>
+            <button type="button" id="btn-menu-thajweed">THAJWEED</button>
+            <button type="button" id="btn-menu-qiraat">QIRA'AT</button>
+            <button type="button" id="btn-menu-logout">LOGOUT</button>
+        </div>
+    </aside>
     </header>
 
     <div class="greeting">

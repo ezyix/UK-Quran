@@ -37,31 +37,18 @@
 
   <!-- FORM CARD -->
   <section class="panel form-panel" aria-labelledby="form-heading">
-    <h2 id="form-heading" class="panel-heading">
-  <div class="brand-mark" aria-hidden="true">
-    <svg viewBox="0 0 48 48" width="34" height="34">
-      <path d="M24 2 L28 20 L46 24 L28 28 L24 46 L20 28 L2 24 L20 20 Z" fill="url(#goldGrad)"/>
-      <defs>
-        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#f3d98b"/>
-          <stop offset="1" stop-color="#b8912f"/>
-        </linearGradient>
-      </defs>
-    </svg>
-  </div>
-  Certificate Details
-    </h2>
+    <h2 id="form-heading" class="panel-heading">Certificate Details</h2>
 
     <form id="certForm" novalidate>
       <div class="field">
         <label for="studentName">Student Name</label>
-        <input type="text" id="studentName" name="studentName" placeholder="e.g. Aisha Rahman / عائشة" autocomplete="off">
+        <input type="text" id="studentName" name="studentName" placeholder="e.g. MUHAMMED / محمد" autocomplete="off">
         <span class="field-error" id="err-studentName"></span>
       </div>
 
       <div class="field">
         <label for="juzName">Juz Completed</label>
-        <input type="text" id="juzName" name="juzName" placeholder="e.g. Juz Amma" autocomplete="off">
+        <input type="text" id="juzName" name="juzName" placeholder="e.g. THABARK / تبارك" autocomplete="off">
         <span class="field-error" id="err-juzName"></span>
       </div>
 
@@ -82,20 +69,7 @@
 
   <!-- PREVIEW CARD -->
   <section class="panel preview-panel" aria-labelledby="preview-heading">
-    <h2 id="preview-heading" class="panel-heading">
-  <div class="brand-mark" aria-hidden="true">
-    <svg viewBox="0 0 48 48" width="34" height="34">
-      <path d="M24 2 L28 20 L46 24 L28 28 L24 46 L20 28 L2 24 L20 20 Z" fill="url(#goldGrad)"/>
-      <defs>
-        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#f3d98b"/>
-          <stop offset="1" stop-color="#b8912f"/>
-        </linearGradient>
-      </defs>
-    </svg>
-  </div>
-   Preview
-    </h2>
+    <h2 id="preview-heading" class="panel-heading">Preview</h2>
 
     <div class="canvas-frame" id="canvasFrame">
       <canvas id="certCanvas"></canvas>
