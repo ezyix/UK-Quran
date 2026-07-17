@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QIRA'AT</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
     <style>
         .student-action-card {
             background: white;
@@ -143,7 +143,7 @@
         </div>
     </div>
     <script>
-        const audioFolder = 'audios/JUZ-30/';
+        const audioFolder = '../../Audios/JUZ-30/';
         const audioFiles = [
             '100 - Adiyat.mp3',
             "101 - Qari'ah.mp3",
@@ -319,6 +319,9 @@
             const ignoreClick = event.target.closest('.audio-list, .audio-search, input, audio, button');
             if (ignoreClick) return;
             card.classList.toggle('open');
+        });
+                document.getElementById('btn-back').addEventListener('click', () => {
+            window.location.href = '../Student/student.html';
         });
     </script>
 </body>

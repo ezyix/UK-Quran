@@ -1,6 +1,6 @@
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signOut as secondarySignOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { ref, get, set, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import { auth, database, secondaryAuth } from "./firebase-config.js";
+import { auth, database, secondaryAuth } from "../../JavaScript/firebase-config.js";
 
 let currentTeacherUid = null;
 let students = [];
@@ -626,8 +626,8 @@ if (progressFilterYear) {
 
 // 5. Basic Button Listeners
 if (btnMarkAll) btnMarkAll.addEventListener('click', () => { students.forEach(s => s.isPresent = true); renderStudents(); });
-if (btnLogout) btnLogout.addEventListener('click', () => { signOut(auth).then(() => window.location.href = 'index.html'); });
-if (btnViewReports) btnViewReports.addEventListener('click', () => window.location.href = 'reports.html');
+if (btnLogout) btnLogout.addEventListener('click', () => { signOut(auth).then(() => window.location.href = '../../index.html'); });
+if (btnViewReports) btnViewReports.addEventListener('click', () => window.location.href = '../Report/reports.html');
 
 // --- 6. ADD STUDENT (creates real Auth account + duplicate check) ---
 function updateStudentNameHint() {

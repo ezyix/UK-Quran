@@ -1,7 +1,7 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { ref, get, query, orderByKey, startAt, endAt } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import { auth, database } from "./firebase-config.js";
-import { archivedReports } from './archived-data.js';
+import { auth, database } from "../../JavaScript/firebase-config.js";
+import { archivedReports } from '../../JavaScript/archived-data.js';
 
 let currentTeacherUid = null;
 let studentsObj = {}; // Quick lookup for student names
@@ -36,7 +36,7 @@ function showToast(message, type = 'success') {
 }
 
 // Go back to Dashboard
-btnBack.addEventListener('click', () => { window.location.href = 'teacher.html'; });
+btnBack.addEventListener('click', () => { window.location.href = '../Teacher/teacher.html'; });
 
 if (btnDownload) {
     btnDownload.addEventListener('click', downloadPdfReport);
@@ -49,7 +49,7 @@ onAuthStateChanged(auth, (user) => {
         showReportLoading();
         loadAllData();
     } else {
-        window.location.href = 'index.html';
+        window.location.href = '../../index.html';
     }
 });
 

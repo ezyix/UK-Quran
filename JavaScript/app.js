@@ -149,7 +149,7 @@ window.addEventListener('load', () => {
     }
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+        navigator.serviceWorker.register('/JavaScript/sw.js').catch(() => {});
     }
 });
 
@@ -168,7 +168,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         // Teacher Login uses standard Firebase Auth directly.
         signInWithEmailAndPassword(auth, idOrEmail, passwordOrPin)
             .then(() => {
-                window.location.href = "teacher.html";
+                window.location.href = "Components/Teacher/teacher.html";
             })
             .catch(() => {
                 submitBtn.disabled = false;
@@ -200,7 +200,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         }
 
         if (stillExists) {
-            window.location.href = "student.html";
+            window.location.href = "Components/Student/student.html";
         } else {
             await signOut(auth);
             submitBtn.disabled = false;

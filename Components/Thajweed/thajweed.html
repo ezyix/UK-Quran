@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THAJWEED CLASS</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
     <style>
 .video-list { 
   display: flex; 
@@ -33,7 +33,7 @@
         .play-overlay { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; border: 0; padding: 0; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .play-overlay svg { width: 18px; height: 18px; fill: #fff; }
         .student-action-card { background: white; margin: 10px; border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .lesson-1{background-image: url(lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        .lesson-1{background-image: url(../../Images/Banner/lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
         .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px; position: relative; padding-right: 28px;}
         .student-action-card h3 { cursor: pointer; }
         .student-action-card h3::after {
@@ -144,11 +144,11 @@
         });
 
         const videoList = document.getElementById('video-list');
-        const defaultThumb = 'images/arabic-letters/PART- 2.webp';
-        const thumbSrc = (partNum) => `images/arabic-letters/PART- ${partNum}.webp`;
+        const defaultThumb = '../../Images/Arabic-letters/PART- 2.webp';
+        const thumbSrc = (partNum) => `../../Images/Arabic-letters/PART- ${partNum}.webp`;
 
         function getVideoUrl(fileName) {
-            return 'videos/arabic-letters/' + encodeURIComponent(fileName);
+            return '../../Videos/Arabic-letters/' + encodeURIComponent(fileName);
         }
 
         videoFiles.forEach((fileName, index) => {
@@ -202,7 +202,7 @@
         });
 
         document.getElementById('btn-back').addEventListener('click', () => {
-            window.location.href = 'student.html';
+            window.location.href = '../Student/student.html';
         });
 
         // make lesson cards collapsible; start closed by default
