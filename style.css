@@ -526,11 +526,13 @@ input:focus {
     background: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 40px 16px;
+    box-sizing: border-box;
     z-index: 9999;
     backdrop-filter: blur(3px);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;   
+    -webkit-overflow-scrolling: touch;
 }
 .modal-overlay.hidden { display: none !important; }
 body.modal-open { overflow: hidden; }

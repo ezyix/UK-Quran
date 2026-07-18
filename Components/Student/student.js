@@ -32,6 +32,7 @@ const btnMenuClose = document.getElementById('btn-menu-close');
 const btnMenuHome = document.getElementById('btn-menu-home');
 const btnMenuThajweed = document.getElementById('btn-menu-thajweed');
 const btnMenuQiraat = document.getElementById('btn-menu-qiraat');
+const btnMenuCertificates = document.getElementById('btn-menu-certificates');
 const btnMenuLogout = document.getElementById('btn-menu-logout');
 
 function lockBodyScroll() {
@@ -366,6 +367,11 @@ if (btnMenu && studentMenuBackdrop && studentSideMenu) {
         event.stopPropagation();
         openStudentMenu();
     });
+    btnMenuCertificates?.addEventListener('click', () => {
+        closeStudentMenu();
+        window.location.href = '../Certificates/certificates.html';
+    });
+
     btnMenuClose?.addEventListener('click', closeStudentMenu);
     studentMenuBackdrop?.addEventListener('click', closeStudentMenu);
 }

@@ -108,6 +108,7 @@
                 <button type="button" id="btn-menu-home">HOME</button>
                 <button type="button" id="btn-menu-thajweed">THAJWEED</button>
                 <button type="button" id="btn-menu-qiraat">QIRA'AT</button>
+                <button type="button" id="btn-menu-certificates">CERTIFICATES</button>
                 <button type="button" id="btn-menu-logout">LOGOUT</button>
             </div>
         </aside>
@@ -358,6 +359,7 @@
         const btnMenuHome = document.getElementById('btn-menu-home');
         const btnMenuThajweed = document.getElementById('btn-menu-thajweed');
         const btnMenuQiraat = document.getElementById('btn-menu-qiraat');
+        const btnMenuCertificates = document.getElementById('btn-menu-certificates');
         const btnMenuLogout = document.getElementById('btn-menu-logout');
 
         const openMenu = () => {
@@ -390,6 +392,10 @@
         btnMenuQiraat?.addEventListener('click', () => {
             closeMenu();
             window.location.href = '../Qira\'at/qiraat.html';
+        });
+        btnMenuCertificates?.addEventListener('click', () => {
+            closeMenu();
+            window.location.href = '../Certificates/certificates.html';
         });
         btnMenuLogout?.addEventListener('click', () => {
             closeMenu();

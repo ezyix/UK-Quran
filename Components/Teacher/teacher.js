@@ -22,6 +22,7 @@ const teacherSideMenu = document.getElementById('teacher-side-menu');
 const btnMenuClose = document.getElementById('btn-menu-close');
 const btnMenuHome = document.getElementById('btn-menu-home');
 const btnMenuCertGenerator = document.getElementById('btn-menu-cert-generator');
+const btnMenuUpload = document.getElementById('btn-menu-upload');
 const btnMenuReport = document.getElementById('btn-menu-report');
 const btnMenuLogout = document.getElementById('btn-menu-logout');
 const btnSaveReport = document.getElementById('btn-save-report');
@@ -653,6 +654,7 @@ if (btnMenu && teacherMenuBackdrop && teacherSideMenu) {
 }
 if (btnMenuHome) btnMenuHome.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = 'teacher.html'; });
 if (btnMenuCertGenerator) btnMenuCertGenerator.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = '../Certificate-Generator/certificategenerator.html'; });
+if (btnMenuUpload) btnMenuUpload.addEventListener('click', () => { window.location.href = '../Upload/upload.html'; });
 if (btnMenuReport) btnMenuReport.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); window.location.href = '../Report/reports.html'; });
 if (btnMenuLogout) btnMenuLogout.addEventListener('click', () => { teacherSideMenu.classList.remove('open'); teacherMenuBackdrop.classList.remove('open'); signOut(auth).then(() => window.location.href = '../../index.html'); });
 if (btnViewReports) btnViewReports.addEventListener('click', () => window.location.href = '../Report/reports.html');

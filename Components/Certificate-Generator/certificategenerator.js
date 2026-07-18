@@ -79,6 +79,7 @@
   const menuBackdrop = document.getElementById('cert-menu-backdrop');
   const menuHome = document.getElementById('btn-menu-home');
   const menuCert = document.getElementById('btn-menu-cert-generator');
+  const menuUpload = document.getElementById('btn-menu-upload');
   const menuReport = document.getElementById('btn-menu-report');
   const menuLogout = document.getElementById('btn-menu-logout');
 
@@ -400,6 +401,7 @@
   if (menuBackdrop) menuBackdrop.addEventListener('click', closeMenu);
   if (menuHome) menuHome.addEventListener('click', () => { window.location.href = '../Teacher/teacher.html'; });
   if (menuCert) menuCert.addEventListener('click', () => { window.location.href = './certificategenerator.html'; });
+  if (menuUpload) menuUpload.addEventListener('click', () => { window.location.href = '../Upload/upload.html'; });
   if (menuReport) menuReport.addEventListener('click', () => { window.location.href = '../Report/reports.html'; });
   if (menuLogout) menuLogout.addEventListener('click', () => { window.location.href = '../../index.html'; });
 
