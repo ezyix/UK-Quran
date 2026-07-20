@@ -326,6 +326,46 @@
       || 'student';
   }
 
+  async function exportCanvasBlob({ type = 'image/jpeg', targetBytes = 0.9 * 1024 * 1024, minQuality = 0.55, maxQuality = 0.92, maxRounds = 8 } = {}) {
+    const toBlob = (quality) => new Promise(resolve => canvas.toBlob(resolve, type, quality));
+
+    let low = minQuality;
+    let high = maxQuality;
+    let bestBlob = await toBlob(high);
+
+    if (!bestBlob) {
+      throw new Error('Failed to export certificate image.');
+    }
+
+    if (bestBlob.size <= targetBytes) {
+      return bestBlob;
+    }
+
+    let bestSize = bestBlob.size;
+    let bestQuality = high;
+
+    for (let i = 0; i < maxRounds; i += 1) {
+      const quality = (low + high) / 2;
+      const blob = await toBlob(quality);
+      if (!blob) break;
+
+      if (blob.size <= targetBytes) {
+        bestBlob = blob;
+        bestSize = blob.size;
+        bestQuality = quality;
+        low = quality;
+      } else {
+        high = quality;
+      }
+
+      if (high - low < 0.005) {
+        break;
+      }
+    }
+
+    return bestBlob;
+  }
+
   function triggerDownload(href, filename) {
     const a = document.createElement('a');
     a.style.display = 'none';
@@ -342,13 +382,20 @@
     document.body.removeChild(a);
   }
 
-  downloadBtn.addEventListener('click', () => {
+  downloadBtn.addEventListener('click', async () => {
     if (!hasGenerated) return;
 
-    const filename = `certificate-${sanitizeFilename(currentStudentName)}.png`;
-    const dataUrl = canvas.toDataURL('image/png');
-    triggerDownload(dataUrl, filename);
-    showToast('Certificate downloading....');
+    const filename = `certificate-${sanitizeFilename(currentStudentName)}.jpg`;
+    try {
+      const blob = await exportCanvasBlob({ type: 'image/jpeg', targetBytes: 0.9 * 1024 * 1024 });
+      const url = URL.createObjectURL(blob);
+      triggerDownload(url, filename);
+      showToast('downloading....');
+      setTimeout(() => URL.revokeObjectURL(url), 15000);
+    } catch (err) {
+      console.error(err);
+      showToast('Could not download certificate. Please try again.');
+    }
   });
 
   /* ----------------------------------------------------------------
