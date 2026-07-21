@@ -806,6 +806,6 @@ input.input-error {
     transition: opacity 0.42s ease, visibility 0.42s ease;
 }
 .preloader-content { display:flex; align-items:center; gap:18px; flex-direction:column; }
-.preloader-logo { width:84px; height:84px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+.preloader-logo { width:124px; height:124px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
 .preloader-text { margin:0; font-size:16px; color:#5C4B37; font-weight:600; }
 .preloader-fade { opacity:0; visibility:hidden; pointer-events:none; }
