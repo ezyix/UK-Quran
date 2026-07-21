@@ -71,7 +71,6 @@
   const placeholder = document.getElementById('canvasPlaceholder');
 
   const downloadBtn = document.getElementById('downloadBtn');
-  const printBtn = document.getElementById('printBtn');
   const resetBtn = document.getElementById('resetBtn');
 
   const btnMenu = document.getElementById('btn-menu');
@@ -286,7 +285,6 @@
       placeholder.classList.add('hidden');
       canvas.classList.remove('hidden');
       downloadBtn.disabled = false;
-      printBtn.disabled = false;
       showToast('Certificate Generated.');
     } catch (err) {
       console.error(err);
@@ -313,7 +311,6 @@
     canvas.classList.add('hidden');
     placeholder.classList.remove('hidden');
     downloadBtn.disabled = true;
-    printBtn.disabled = true;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
@@ -396,36 +393,6 @@
       console.error(err);
       showToast('Could not download certificate. Please try again.');
     }
-  });
-
-  /* ----------------------------------------------------------------
-     Event: Print
-     ---------------------------------------------------------------- */
-  printBtn.addEventListener('click', () => {
-    if (!hasGenerated) return;
-    const dataUrl = canvas.toDataURL('image/png', 1.0);
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      showToast('Please allow pop-ups to print the certificate.');
-      return;
-    }
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Print Certificate</title>
-          <style>
-            @page { margin: 0; size: landscape; }
-            html, body { margin: 0; padding: 0; }
-            img { width: 100%; height: auto; display: block; }
-          </style>
-        </head>
-        <body>
-          <img src="${dataUrl}" onload="window.focus(); window.print();">
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
   });
 
   /* ----------------------------------------------------------------
