@@ -24,6 +24,10 @@ const donateModal = document.getElementById('modal-donate');
 const btnCloseMonthly = document.getElementById('btn-close-monthly-progress');
 const btnCloseDonate = document.getElementById('btn-close-donate');
 const btnCopyUpi = document.getElementById('btn-copy-upi');
+const btnShareQr = document.getElementById('btn-share-qr');
+const btnPayNow = document.getElementById('btn-pay-now');
+const donationQrImage = document.getElementById('donation-qr-image');
+const upiActionsContainer = document.getElementById('donation-upi-actions');
 const btnMenu = document.getElementById('btn-menu');
 const donationUpi = 'abutaubha123-3@okaxis';
 const studentMenuBackdrop = document.getElementById('student-menu-backdrop');
@@ -295,6 +299,83 @@ if (btnCopyUpi) {
             showToast('Copy failed. Please copy manually.', 'error');
         }
     });
+}
+
+if (btnShareQr) {
+    btnShareQr.addEventListener('click', async () => {
+        try {
+            const imgEl = donationQrImage;
+            if (!imgEl) throw new Error('QR image not found');
+            const src = imgEl.src;
+            const res = await fetch(src);
+            const blob = await res.blob();
+            const file = new File([blob], 'qr.png', { type: blob.type });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: 'UK Quran Donation', text: donationUpi });
+                showToast('Sharing dialog opened');
+            } else if (navigator.share) {
+                await navigator.share({ title: 'UK Quran Donation', text: donationUpi });
+                showToast('Sharing dialog opened');
+            } else {
+                await navigator.clipboard.writeText(donationUpi);
+                showToast('Sharing not available — UPI copied');
+            }
+        } catch (err) {
+            console.error('Share failed', err);
+            showToast('Share failed', 'error');
+        }
+    });
+}
+
+if (btnPayNow) {
+    btnPayNow.addEventListener('click', () => {
+        showUpiOptions();
+    });
+}
+
+function showUpiOptions() {
+    if (!upiActionsContainer) return;
+    upiActionsContainer.innerHTML = `
+        <div class="upi-actions-card" style="padding:12px; border-radius:12px; background:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.08); margin-top:14px; text-align:center;">
+            <p style="margin:0 0 10px; color:#333;">Open your UPI app to pay or copy the UPI ID.</p>
+            <div style="display:flex; gap:8px; justify-content:center;">
+                <button id="upi-open-app" class="btn-primary">Open UPI App</button>
+                <button id="upi-copy" class="copy-button">Copy UPI</button>
+                <button id="upi-cancel" class="btn-link">Cancel</button>
+            </div>
+        </div>
+    `;
+    upiActionsContainer.classList.remove('hidden');
+
+    const openBtn = document.getElementById('upi-open-app');
+    const copyBtn = document.getElementById('upi-copy');
+    const cancelBtn = document.getElementById('upi-cancel');
+    const upiLink = `upi://pay?pa=${encodeURIComponent(donationUpi)}&pn=${encodeURIComponent('UK Quran')}&tn=${encodeURIComponent('Donation')}&cu=INR`;
+
+    if (openBtn) {
+        openBtn.addEventListener('click', () => {
+            // Attempt to open installed UPI apps via URL scheme
+            window.location.href = upiLink;
+        });
+    }
+    if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(donationUpi);
+                showToast('UPI ID copied');
+            } catch (err) {
+                console.error(err);
+                showToast('Copy failed', 'error');
+            }
+        });
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            upiActionsContainer.classList.add('hidden');
+            upiActionsContainer.innerHTML = '';
+        });
+    }
 }
 
 if (donateModal) {

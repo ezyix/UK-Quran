@@ -26,63 +26,57 @@
         </div>
     </div>
     <div id="login-container" class="login-container hidden">
-        <!-- Logo Header -->
-        <div class="header">
-            <div class="logo"><img src="Images/Logo/logo-black-icon.webp" alt="logo" height="70px" width="70px" style="border-radius: 100px; border: white 4px solid ;"></div>
-            <h1>UK Quran</h1>
+        <div id="intro-screen" class="intro-screen">
+            <div class="intro-inner">
+                <div class="logo"><img src="Images/Logo/logo-black-icon.webp" alt="logo" height="70px" width="70px" style="border-radius: 100px; border: white 4px solid ;"></div>
+                <h1>UK Quran</h1>
+
+            </div>
+            <button id="start-btn" class="next-button">Next</button>
         </div>
 
-        <!-- Role Toggle -->
-        <div class="role-toggle">
-            <button id="btn-student" class="active">👤 Student</button>
-            <button id="btn-teacher">🎓 Teacher</button>
-        </div>
-
-        <!-- Login Form -->
-        <form id="login-form">
-            <!-- Dynamic Labels based on Role -->
-            <label1 id="lbl-id" style="color:white;">Student ID</label1>
-            <input class="nameinput" type="text" id="input-id" placeholder="name-123" required>
-
-            <label1 id="lbl-password" style="color: white;">PIN</label1>
-            <div class="password-container">
-                <input type="password" id="input-password" placeholder="••••" required>
-                <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password" aria-pressed="false">
-                    <svg class="icon-eye icon-eye-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M12 5c-5.5 0-9.7 3.5-11.5 7 1.8 3.5 6 7 11.5 7s9.7-3.5 11.5-7C21.7 8.5 17.5 5 12 5Zm0 11.5A4.5 4.5 0 1 1 12 8a4.5 4.5 0 0 1 0 9Zm0-2.2A2.3 2.3 0 1 0 12 9.7a2.3 2.3 0 0 0 0 4.6Z"/>
-                    </svg>
-                    <svg class="icon-eye icon-eye-slash" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M2.1 3.5 3.5 2.1l18.4 18.4-1.4 1.4-3.2-3.2c-1.5.5-3 .8-4.3.8-5.5 0-9.7-3.5-11.5-7 .7-1.4 1.8-2.8 3.2-4l-2.6-2.6Zm8.2 8.2 1.9 1.9a2.3 2.3 0 0 0-1.9-1.9Zm2.1-3.8a4.5 4.5 0 0 1 4.4 4.4l2.1 2.1c1.7-1.2 3-2.6 3.8-4-1.8-3.5-6-7-11.5-7-1.1 0-2.3.1-3.5.4l1.8 1.8c.9-.4 1.9-.7 2.9-.7Z"/>
-                    </svg>
-                </button>
+        <div id="login-page" class="login-page hidden">
+            <div class="header">
+                <div class="logo"><img src="Images/Logo/logo-black-icon.webp" alt="logo" height="70px" width="70px" style="border-radius: 100px; border: white 4px solid ;"></div>
+                <h1>UK Quran</h1>
             </div>
 
-            <button type="submit" class="btn-primary1" id="btn">Login ➔</button>
-        </form>
+            <!-- Role Toggle -->
+            <div class="role-toggle">
+                <button id="btn-student" class="active">👤 Student</button>
+                <button id="btn-teacher">🎓 Teacher</button>
+            </div>
 
-        <div class="footer">
-            <p>© 2026 UK QURAN • PRIVACY & TERMS</p>
-        </div>
-    </div>
+            <!-- Login Form -->
+            <form id="login-form">
+                <!-- Dynamic Labels based on Role -->
+                <label1 id="lbl-id" style="color:white;">Student ID</label1>
+                <input class="nameinput" type="text" id="input-id" placeholder="name-123" required>
 
-    <div id="a2hs-prompt" class="a2hs-prompt " aria-live="polite">
-        <div class="a2hs-card">
-            <div class="a2hs-content">
-                <span class="a2hs-icon">📱</span>
-                <div>
-                    <p class="a2hs-title">Add UK Quran to your Home Screen</p>
-                    <p id="a2hs-description" class="a2hs-description">Install the app for faster access and a better experience.</p>
+                <label1 id="lbl-password" style="color: white;">PIN</label1>
+                <div class="password-container">
+                    <input type="password" id="input-password" placeholder="••••" required>
+                    <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password" aria-pressed="false">
+                        <svg class="icon-eye icon-eye-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 5c-5.5 0-9.7 3.5-11.5 7 1.8 3.5 6 7 11.5 7s9.7-3.5 11.5-7C21.7 8.5 17.5 5 12 5Zm0 11.5A4.5 4.5 0 1 1 12 8a4.5 4.5 0 0 1 0 9Zm0-2.2A2.3 2.3 0 1 0 12 9.7a2.3 2.3 0 0 0 0 4.6Z"/>
+                        </svg>
+                        <svg class="icon-eye icon-eye-slash" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M2.1 3.5 3.5 2.1l18.4 18.4-1.4 1.4-3.2-3.2c-1.5.5-3 .8-4.3.8-5.5 0-9.7-3.5-11.5-7 .7-1.4 1.8-2.8 3.2-4l-2.6-2.6Zm8.2 8.2 1.9 1.9a2.3 2.3 0 0 0-1.9-1.9Zm2.1-3.8a4.5 4.5 0 0 1 4.4 4.4l2.1 2.1c1.7-1.2 3-2.6 3.8-4-1.8-3.5-6-7-11.5-7-1.1 0-2.3.1-3.5.4l1.8 1.8c.9-.4 1.9-.7 2.9-.7Z"/>
+                        </svg>
+                    </button>
                 </div>
+
+                <button type="submit" class="btn-primary1" id="btn">Login ➔</button>
+            </form>
+
+            <div class="footer">
+                <p>© 2026 UK QURAN • PRIVACY & TERMS</p>
             </div>
-            <div class="a2hs-actions">
-                <button id="btn-add-home" class="btn-primary" type="button">Add</button>
-                <button id="btn-dismiss-a2hs" class="btn-link" type="button">Maybe later</button>
-            </div>
-            <p id="ios-a2hs-tip" class="a2hs-ios-tip hidden">Tap the share icon, then choose <strong>Add to Home Screen</strong>.</p>
         </div>
     </div>
 
-    <div id="toast-container" class="toast-container"></div>
+  
+
 
     <!-- Firebase SDK (Modular V10) -->
     <script>
@@ -149,7 +143,22 @@
             showLoginPage();
         }
 
+        function wireIntroButton() {
+            const startBtn = document.getElementById('start-btn');
+            const introScreen = document.getElementById('intro-screen');
+            const loginPage = document.getElementById('login-page');
+
+            if (!startBtn || !introScreen || !loginPage) return;
+
+            startBtn.addEventListener('click', () => {
+                introScreen.classList.add('hidden');
+                loginPage.classList.remove('hidden');
+                loginContainer.classList.add('gradient-bg');
+            });
+        }
+
         waitForReady();
+        wireIntroButton();
     })();
     </script>
     <script type="module" src="JavaScript/app.js"></script>
