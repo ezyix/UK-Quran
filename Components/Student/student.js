@@ -302,7 +302,7 @@ if (btnCopyUpi) {
 
 if (btnQrPay) {
     btnQrPay.addEventListener('click', () => {
-        const upiLink = `upi://pay?pa=${encodeURIComponent(donationUpi)}&pn=${encodeURIComponent('UK Quran')}&tn=${encodeURIComponent('Donation')}&cu=INR`;
+        const upiLink = `upi://pay?pa=${encodeURIComponent(donationUpi)}&pn=${encodeURIComponent('UK Quran')}&tn=${encodeURIComponent('Donation for UK Quran')}&cu=INR`;
         window.location.href = upiLink;
     });
 }
