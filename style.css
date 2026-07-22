@@ -101,7 +101,7 @@ body::before {
     align-items: center;
     width: 100%;
     text-align: center;
-    height: 600px;
+    height: 560px;
 }
 
 .intro-screen h1 {
@@ -942,7 +942,6 @@ input.input-error {
   max-height: 800px;
   background: linear-gradient(145deg, #1b1c1e 0%, #101112 50%, #060607 100%);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  border-radius: 16px;
   overflow: hidden;
   display: flex;
   align-items: center;
