@@ -105,13 +105,18 @@
         const preloader = document.getElementById('preloader');
         const loginContainer = document.getElementById('login-container');
 
-        function getBackgroundImageUrl(){
+        function getBackgroundImageUrls(element){
             try {
-                const bg = getComputedStyle(document.body).backgroundImage || '';
-                const match = bg.match(/url\((['"]?)(.*)\1\)/);
-                return match ? match[2] : null;
+                const bg = getComputedStyle(element).backgroundImage || '';
+                const urls = [];
+                const regex = /url\((['"]?)(.*?)\1\)/g;
+                let match;
+                while ((match = regex.exec(bg)) !== null) {
+                    if (match[2]) urls.push(match[2]);
+                }
+                return urls;
             } catch (error) {
-                return null;
+                return [];
             }
         }
 
@@ -134,9 +139,10 @@
                 });
             });
 
-            const backgroundImage = getBackgroundImageUrl();
-            const bgPromise = backgroundImage ? loadImage(backgroundImage) : Promise.resolve();
-            return Promise.all([...imagePromises, bgPromise]);
+            const backgroundElements = [document.body, loginContainer];
+            const bgUrls = backgroundElements.flatMap((element) => element ? getBackgroundImageUrls(element) : []);
+            const bgPromises = bgUrls.map(loadImage);
+            return Promise.all([...imagePromises, ...bgPromises]);
         }
 
         function showLoginPage(){

@@ -926,7 +926,7 @@ input.input-error {
 }
 .preloader-content { display:flex; align-items:center; gap:18px; flex-direction:column; }
 .preloader-logo { width:124px; height:124px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); position: relative; z-index: 10; }
-.preloader-text { margin:0; font-size:16px; color:#5C4B37; font-weight:600; position: relative; z-index: 10; }
+.preloader-text { margin:0; font-size:16px; color:#ffffff; font-weight:600; position: relative; z-index: 10; }
 .preloader-fade { opacity:0; visibility:hidden; pointer-events:none; }
 
 /* --- Abstract Canvas Preloader --- */
