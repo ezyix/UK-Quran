@@ -24,6 +24,9 @@ const donateModal = document.getElementById('modal-donate');
 const btnCloseMonthly = document.getElementById('btn-close-monthly-progress');
 const btnCloseDonate = document.getElementById('btn-close-donate');
 const btnCopyUpi = document.getElementById('btn-copy-upi');
+const btnQrPay = document.getElementById('btn-qr-pay');
+const btnQrShare = document.getElementById('btn-qr-share');
+const donationQrImage = document.getElementById('donation-qr-image');
 const btnMenu = document.getElementById('btn-menu');
 const donationUpi = 'abutaubha123-3@okaxis';
 const studentMenuBackdrop = document.getElementById('student-menu-backdrop');
@@ -297,6 +300,48 @@ if (btnCopyUpi) {
     });
 }
 
+if (btnQrPay) {
+    btnQrPay.addEventListener('click', () => {
+        const upiLink = `upi://pay?pa=${encodeURIComponent(donationUpi)}&pn=${encodeURIComponent('UK Quran')}&tn=${encodeURIComponent('Donation for UK Quran')}&cu=INR`;
+        window.location.href = upiLink;
+    });
+}
+
+if (btnQrShare) {
+    btnQrShare.addEventListener('click', async () => {
+        try {
+            const img = donationQrImage;
+            if (!img) throw new Error('QR image not found');
+            const res = await fetch(img.src);
+            const blob = await res.blob();
+            const file = new File([blob], 'qr-code.png', { type: blob.type });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ 
+                    files: [file], 
+                    title: 'UK Quran Donation', 
+                    text: `Donate to UK Quran Program\nUPI: ${donationUpi}` 
+                });
+                showToast('Sharing dialog opened');
+            } else if (navigator.share) {
+                await navigator.share({ 
+                    title: 'UK Quran Donation', 
+                    text: `Donate to UK Quran Program\nUPI: ${donationUpi}` 
+                });
+                showToast('Sharing dialog opened');
+            } else {
+                await navigator.clipboard.writeText(donationUpi);
+                showToast('Sharing not supported - UPI copied instead');
+            }
+        } catch (err) {
+            console.error('Share failed', err);
+            if (err.name !== 'AbortError') {
+                showToast('Share failed', 'error');
+            }
+        }
+    });
+}
+
 if (donateModal) {
     donateModal.addEventListener('click', (event) => {
         if (event.target === donateModal) {
@@ -401,5 +446,12 @@ if (btnMenuLogout) {
         studentSideMenu.classList.remove('open');
         studentMenuBackdrop.classList.remove('open');
         signOut(auth).then(() => window.location.href = '../../index.html');
+    });
+}
+
+function qrImageClick(){
+        btnQrPay.addEventListener('click', () => {
+        const upiLink = `upi://pay?pa=${encodeURIComponent(donationUpi)}&pn=${encodeURIComponent('UK Quran')}&tn=${encodeURIComponent('Donation for UK Quran')}&cu=INR`;
+        window.location.href = upiLink;
     });
 }
