@@ -36,7 +36,14 @@ http.createServer((req, res) => {
       '.jpg': 'image/jpeg',
       '.jpeg': 'image/jpeg',
       '.svg': 'image/svg+xml',
-      '.webp': 'image/webp'
+      '.webp': 'image/webp',
+      '.mp3': 'audio/mpeg',
+      '.mp4': 'video/mp4',
+      '.m4a': 'audio/mp4',
+      '.wav': 'audio/wav',
+      '.ogg': 'audio/ogg',
+      '.oga': 'audio/ogg',
+      '.webm': 'video/webm'
     };
     res.setHeader('Content-Type', map[ext] || 'application/octet-stream');
     fs.createReadStream(filePath).pipe(res);

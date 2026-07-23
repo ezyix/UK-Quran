@@ -33,7 +33,7 @@
         .play-overlay { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; border: 0; padding: 0; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .play-overlay svg { width: 18px; height: 18px; fill: #fff; }
         .student-action-card { background: white; margin: 10px; border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .lesson-1{background-image: url(/UK-Quran/Images/Banner/lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        .lesson-1{background-image: url(../../images/Banner/lesson-1-banner.webp);background-size: 100% 100%;border-radius: 16px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
         .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px; position: relative; padding-right: 28px;}
         .student-action-card h3 { cursor: pointer; }
         .student-action-card h3::after {
@@ -168,11 +168,11 @@
         });
 
         const videoList = document.getElementById('video-list');
-        const defaultThumb = '/UK-Quran/Images/Arabic-letters/PART- 2.webp';
-        const thumbSrc = (partNum) => `/UK-Quran/Images/Arabic-letters/PART- ${partNum}.webp`;
+        const defaultThumb = '../../images/Arabic-letters/PART- 2.webp';
+        const thumbSrc = (partNum) => `../../images/Arabic-letters/PART- ${partNum}.webp`;
 
         function getVideoUrl(fileName) {
-            return '/UK-Quran/Videos/Arabic-letters/' + encodeURIComponent(fileName);
+            return '../../videos/Arabic-letters/' + encodeURIComponent(fileName);
         }
 
         videoFiles.forEach((fileName, index) => {
