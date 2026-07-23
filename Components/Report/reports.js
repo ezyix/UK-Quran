@@ -15,9 +15,7 @@ function containsArabicText(text) {
     return typeof text === 'string' && ARABIC_RE.test(text);
 }
 
-function hasArabicRemarks(rows) {
-    return rows.some(r => containsArabicText(r.remark));
-}
+
 
 // HTML Elements
 const btnBack = document.getElementById('btn-back');
@@ -412,12 +410,7 @@ function downloadPdfReport() {
         const rows = latestReportRows.length > 0 ? latestReportRows : getRowsForPdf();
         const body = rows.map(r => [r.name, r.newPages, r.rev, r.present, r.absent, r.remark || '-']);
 
-        if (hasArabicRemarks(rows)) {
-            // If remarks contain Arabic text, fallback to browser print to preserve Unicode rendering.
-            showToast('Arabic remarks detected. Using browser print for correct PDF output.', 'info');
-            window.print();
-            return;
-        }
+
 
         doc.autoTable({
             head,
