@@ -69,13 +69,15 @@ btnTeacher.addEventListener('click', () => {
 
 // Password visibility toggle
 const togglePassword = document.getElementById('togglePassword');
-togglePassword.addEventListener('click', function () {
-    const isHidden = inputPassword.getAttribute('type') === 'password';
-    inputPassword.setAttribute('type', isHidden ? 'text' : 'password');
-    togglePassword.classList.toggle('is-visible', isHidden);
-    togglePassword.setAttribute('aria-pressed', String(isHidden));
-    togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-});
+if (togglePassword) {
+    togglePassword.addEventListener('click', function () {
+        const isHidden = inputPassword.getAttribute('type') === 'password';
+        inputPassword.setAttribute('type', isHidden ? 'text' : 'password');
+        togglePassword.classList.toggle('is-visible', isHidden);
+        togglePassword.setAttribute('aria-pressed', String(isHidden));
+        togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+}
 
 const a2hsPrompt = document.getElementById('a2hs-prompt');
 const btnAddHome = document.getElementById('btn-add-home');
@@ -110,7 +112,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
     deferredPrompt = event;
     if (shouldShowPrompt()) {
         showA2HSPrompt();
-        iosA2HSTip.classList.add('hidden');
+        if (iosA2HSTip) iosA2HSTip.classList.add('hidden');
     }
 });
 
@@ -119,33 +121,40 @@ window.addEventListener('appinstalled', () => {
     hideA2HSPrompt();
 });
 
-btnAddHome.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
+if (btnAddHome) {
+    btnAddHome.addEventListener('click', async () => {
+        if (!deferredPrompt) {
+            showToast('Install not available for this browser or context.', 'error');
+            return;
+        }
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
 
-    if (choiceResult.outcome === 'accepted') {
-        localStorage.setItem('ukquran_a2hs_added', 'true');
-        hideA2HSPrompt();
-    } else {
+        if (choiceResult.outcome === 'accepted') {
+            localStorage.setItem('ukquran_a2hs_added', 'true');
+            hideA2HSPrompt();
+        } else {
+            localStorage.setItem('ukquran_a2hs_dismissed', 'true');
+            hideA2HSPrompt();
+        }
+
+        deferredPrompt = null;
+    });
+}
+
+if (btnDismissA2HS) {
+    btnDismissA2HS.addEventListener('click', () => {
         localStorage.setItem('ukquran_a2hs_dismissed', 'true');
         hideA2HSPrompt();
-    }
-
-    deferredPrompt = null;
-});
-
-btnDismissA2HS.addEventListener('click', () => {
-    localStorage.setItem('ukquran_a2hs_dismissed', 'true');
-    hideA2HSPrompt();
-});
+    });
+}
 
 window.addEventListener('load', () => {
     if (!shouldShowPrompt()) {
         hideA2HSPrompt();
     } else if (isIos() && !isInStandaloneMode()) {
         showA2HSPrompt();
-        iosA2HSTip.classList.remove('hidden');
+        if (iosA2HSTip) iosA2HSTip.classList.remove('hidden');
     }
 
     if ('serviceWorker' in navigator) {
