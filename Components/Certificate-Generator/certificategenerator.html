@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK-QURAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="certificategenerator.css">
+<style>
+  .page-head { position: relative; }
+  .menu-btn { position: absolute; top: 24px; right: 24px; font-size: 22px; line-height: 1; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.18); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .menu-btn:hover { background: rgba(255,255,255,0.28); }
+  .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.24); opacity: 0; visibility: hidden; transition: opacity 0.28s ease; z-index: 1050; }
+  .menu-backdrop.open { opacity: 1; visibility: visible; }
+  .side-menu { position: fixed; top: 0; right: -100%; width: 80vw; max-width: 440px; height: 100vh; background: #fff; box-shadow: -18px 0 45px rgba(0,0,0,0.12); z-index: 1100; transition: right 0.28s ease; display: flex; flex-direction: column; padding: 32px 32px 28px; }
+  .side-menu.open { right: 0; }
+  .side-menu .menu-close-btn { margin-left: auto; border: none; background: transparent; font-size: 28px; line-height: 1; color: #111; cursor: pointer; }
+  .side-menu .menu-title { margin: 0; font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; font-weight: 700; }
+  .side-menu .menu-list { margin-top: 48px; display: flex; flex-direction: column; gap: 28px; }
+  .side-menu .menu-list button { border: none; background: transparent; text-align: left; color: #111; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; padding: 0; cursor: pointer; }
+  .side-menu .menu-list button + button { padding-top: 28px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .side-menu .menu-list button:hover { color: #0f4ad6; }
+</style>
+</head>
+<body>
+
+<!-- Ambient decorative backdrop -->
+<div class="backdrop" aria-hidden="true">
+  <div class="motif motif--tl"></div>
+  <div class="motif motif--br"></div>
+</div>
+
+<header class="page-head">
+  <button class="menu-btn" id="btn-menu" aria-label="Open menu">☰</button>
+  <div class="brand-mark" aria-hidden="true">
+    <svg viewBox="0 0 48 48" width="34" height="34">
+      <path d="M24 2 L28 20 L46 24 L28 28 L24 46 L20 28 L2 24 L20 20 Z" fill="url(#goldGrad)"/>
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f3d98b"/>
+          <stop offset="1" stop-color="#b8912f"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <p class="eyebrow">UK &middot; Qur'an Learning</p>
+  <h1 class="page-title">Certificate Generator</h1>
+</header>
+
+<div id="cert-menu-backdrop" class="menu-backdrop"></div>
+<aside id="cert-side-menu" class="side-menu" aria-hidden="true">
+  <button type="button" class="menu-close-btn" id="btn-menu-close">×</button>
+  <p class="menu-title">Menu</p>
+  <div class="menu-list">
+    <button type="button" id="btn-menu-home">HOME</button>
+    <button type="button" id="btn-menu-cert-generator">CERTIFICATE</button>
+    <button type="button" id="btn-menu-upload">UPLOAD</button>
+    <button type="button" id="btn-menu-report">REPORT</button>
+    <button type="button" id="btn-menu-logout">LOGOUT</button>
+  </div>
+</aside>
+
+<main class="layout">
+
+  <!-- FORM CARD -->
+  <section class="panel form-panel" aria-labelledby="form-heading">
+    <h2 id="form-heading" class="panel-heading">Certificate Details</h2>
+
+    <form id="certForm" novalidate>
+      <div class="field">
+        <label for="studentName">Student Name</label>
+        <input type="text" id="studentName" name="studentName" placeholder="e.g. MUHAMMED / محمد" autocomplete="off">
+        <span class="field-error" id="err-studentName"></span>
+      </div>
+
+      <div class="field">
+        <label for="juzName">Juz Completed</label>
+        <input type="text" id="juzName" name="juzName" placeholder="e.g. THABARK / تبارك" autocomplete="off">
+        <span class="field-error" id="err-juzName"></span>
+      </div>
+
+      <div class="field">
+        <label for="certDate">Date</label>
+        <input type="date" id="certDate" name="certDate">
+        <span class="field-error" id="err-certDate"></span>
+      </div>
+
+      <div class="button-row">
+        <button type="submit" class="btn btn-gold" id="generateBtn">
+          <span>Generate Certificate</span>
+        </button>
+        <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- PREVIEW CARD -->
+  <section class="panel preview-panel" aria-labelledby="preview-heading">
+    <h2 id="preview-heading" class="panel-heading">Preview</h2>
+
+    <div class="canvas-frame" id="canvasFrame">
+      <canvas id="certCanvas"></canvas>
+      <div class="canvas-placeholder" id="canvasPlaceholder">
+        <svg viewBox="0 0 64 64" width="46" height="46" aria-hidden="true">
+          <rect x="6" y="6" width="52" height="52" rx="4" fill="none" stroke="#c9a227" stroke-width="2" opacity="0.6"/>
+          <path d="M6 44 L22 28 L32 38 L44 24 L58 40" fill="none" stroke="#c9a227" stroke-width="2" opacity="0.6"/>
+          <circle cx="20" cy="18" r="4" fill="#c9a227" opacity="0.6"/>
+        </svg>
+        <p>Your certificate preview will appear here</p>
+      </div>
+    </div>
+
+    <div class="button-row button-row--actions">
+      <button type="button" class="btn btn-navy" id="downloadBtn" disabled>
+        <span>Download Certificate</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-foot">
+</footer>
+
+<canvas id="workCanvas" style="display:none;"></canvas>
+
+<script src="certificategenerator.js"></script>
+</body>
+</html>

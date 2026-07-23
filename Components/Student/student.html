@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Student Specific Styles */
+        .greeting { padding: 20px 20px 0; }
+        .greeting h1 { color:#5C4B37; font-size: 22px; margin: 0 0 5px; }
+        .greeting p { color: var(--text-muted); font-size: 13px; margin: 0; }
+        
+        .student-action-card { background: var(--white); margin: 20px; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .student-action-card h3 { margin: 0 0 20px; font-size: 16px; color: #5C4B37; display: flex; align-items: center; gap: 8px;}
+        
+        .stepper-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f4f5f7; padding: 10px; border-radius: 12px;}
+        .stepper-label { font-weight: 600; font-size: 14px; color: #333; }
+        .stepper-controls { display: flex; align-items: center; gap: 10px; }
+        .stepper-controls button { width: 35px; height: 35px; border-radius: 50%; border: none; background: white; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: var(--primary-orange);}
+        .stepper-controls input { width: 40px; text-align: center; border: none; background: transparent; font-size: 18px; font-weight: bold; margin: 0; padding: 0; pointer-events: none;}
+        
+        .attendance-toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; border: 1px solid #eaeaea; border-radius: 12px; }
+        .toggle-btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; background: #f1f3f4; color: #888; transition: 0.2s;}
+        .toggle-btn.active { background: #34A853; color: white; }
+        .heard-by-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f3f3f3; }
+        .heard-by-row label { min-width: 90px; color: #4b5563; font-size: 13px; font-weight: 600; }
+        .heard-by-row input { flex: 1 1 100%; max-width: 100%; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 12px; font-size: 14px; color: #111827; }
+        .menu-btn { font-size: 22px; line-height: 1; width: 42px; height: 42px; border-radius: 50%; border: none; background: transparent; color: #111; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { background: rgba(0, 0, 0, 0.05); }
+        .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.24); opacity: 0; visibility: hidden; transition: opacity 0.28s ease; z-index: 1050; }
+        .menu-backdrop.open { opacity: 1; visibility: visible; }
+        .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+        .header-actions .header-action-btn { border: none; background: #eef2ff; color: #1d4ed8; padding: 10px 14px; border-radius: 999px; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s ease, transform 0.2s ease; }
+        .header-actions .header-action-btn:hover { background: #dbeafe; transform: translateY(-1px); }
+        .side-menu { position: fixed; top: 0; right: -100%; width: 60vw; max-width: 340px; height: 100vh; background: #fff; box-shadow: -18px 0 45px rgba(0,0,0,0.12); z-index: 1100; transition: right 0.28s ease; display: flex; flex-direction: column; padding: 32px 32px 28px; }
+        .side-menu.open { right: 0; }
+        .side-menu .menu-close-btn { margin-left: auto; border: none; background: transparent; font-size: 28px; line-height: 1; color: #333; cursor: pointer; }
+        .side-menu .menu-title { margin: 0; font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; font-weight: 700; }
+        .side-menu .menu-list { margin-top: 48px; display: flex; flex-direction: column; gap: 28px; }
+        .side-menu .menu-list button { border: none; background: transparent; text-align: left; color: #111; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; padding: 0; cursor: pointer; }
+        .side-menu .menu-list button + button { padding-top: 28px; border-top: 1px solid rgba(0,0,0,0.08); }
+        .side-menu .menu-list button:hover { color: #0f4ad6; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="user-info">
+            <div class="avatar" style="background: #4A90E2;">
+            <img src="../../images/Logo/logo-black-icon.webp" alt="logo" height="50px" width="50px" style="border-radius: 100px;  margin: white;border: black 2px solid ;">
+            </div>
+            <div>
+                <h2 id="student-header-name">Loading...</h2>
+                <p id="student-header-id">ID: ...</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button type="button" class="header-action-btn btn-open-donate" aria-label="Donate">Donate</button>
+            <button class="menu-btn" id="btn-menu" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <div id="student-menu-backdrop" class="menu-backdrop"></div>
+    <aside id="student-side-menu" class="side-menu" aria-hidden="true">
+        <button type="button" class="menu-close-btn" id="btn-menu-close">×</button>
+        <p class="menu-title">UK QURAN</p>
+        <div class="menu-list">
+            <button type="button" id="btn-menu-home">HOME</button>
+            <button type="button" id="btn-menu-thajweed">THAJWEED</button>
+            <button type="button" id="btn-menu-qiraat">QIRA'AT</button>
+            <button type="button" id="btn-menu-certificates">CERTIFICATES</button>
+            <button type="button" id="btn-menu-logout">LOGOUT</button>
+        </div>
+    </aside>
+    </header>
+
+    <div class="greeting">
+        <h1 id="greeting-text">Assalaamu Alaikum..</h1>
+        <p id="current-month-text">Submit your progress for today.</p>
+    </div>
+
+    <!-- Daily Entry Card -->
+    <div class="student-action-card">
+        <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Today's Learning
+        </h3>
+        
+        <div class="attendance-toggle-row">
+            <span class="stepper-label">Mark Attendance Today</span>
+            <div class="toggle-p-a">
+                <button type="button" id="btn-mark-present">Present</button>
+                <button type="button" id="btn-mark-absent" class="active-a">Absent</button>
+            </div>
+        </div>
+
+        <div class="stepper-row">
+            <span class="stepper-label">New Pages</span>
+            <div class="stepper-controls">
+                <select id="inp-new" class="page-select" aria-label="New pages"></select>
+            </div>
+        </div>
+
+        <div class="stepper-row">
+            <span class="stepper-label">Revision Pages</span>
+            <div class="stepper-controls">
+                <select id="inp-rev" class="page-select" aria-label="Revision pages"></select>
+            </div>
+        </div>
+        <div class="heard-by-row">
+            <label for="inp-rev-heard-by">Heard by</label>
+            <input type="text" id="inp-rev-heard-by" placeholder="Enter name">
+        </div>
+
+        <button class="btn-primary" id="btn-submit-progress" style="width: 100%; ; color: #fff;">Submit Progress</button>
+    </div>
+
+    <div class="student-action-row">
+        <button class="btn-square1" id="btn-view-monthly-progress" type="button">PROGRESS</button>
+    </div>    
+    <div class="student-action-row">
+        <button style="color: black; background-image: url(../../images/Banner/lesson-1-banner.webp); background-size: 100% 100%;" class="btn-square btn-secondary" id="btn-open-thajweed" type="button">THAJWEED</button>
+    </div>   
+    <div class="student-action-row">
+        <button class="btn-square3" id="btn-open-qiraat" type="button">QIRA'AT</button>
+    </div>
+      
+
+<!-- Donation Modal -->
+<div id="modal-donate" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:18px;">Support Our Quran Program</h3>
+            <button type="button" id="btn-close-donate" class="icon-btn" style="border:none; background:transparent; font-size:24px; line-height:1;">×</button>
+        </div>
+        <div style="text-align:center; margin-bottom:18px; position:relative; display:inline-block; width:100%; margin-left:auto; margin-right:auto;">
+            <img onclick="qrImageClick()" id="donation-qr-image" src="../../images/Qr-code/Qr-code.jpeg" alt="Donation QR code" style="width:180px; max-width:180px;height: 220px;max-height: 220px; border-radius:16px; box-shadow:0 14px 35px rgba(0,0,0,0.12);">
+
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px;">
+        <button type="button" id="btn-qr-share" class="shareQr-button">Share QR</button>
+        <button type="button" id="btn-qr-pay" class="pay-button" title="Open UPI App">Pay now</button>
+        </div>
+
+        <p style="margin:0 0 18px; color:#4b4b4b; line-height:1.6;">
+            Your donation helps keep Quran classes running and supports students. Scan the QR code or copy the UPI ID below to donate securely with any UPI app.
+        </p>
+        <p style="margin:0 0 18px; color:#2568aa; line-height:1.6;">
+            بارك الله فيك
+        </p>        
+        <div class="donation-upi-row">
+            <span class="donation-upi-text">abutaubha123-3@okaxis</span>
+            <button type="button" id="btn-copy-upi" class="copy-button">Copy</button>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Progress Modal -->
+<div id="modal-monthly-progress" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:18px;">Monthly Progress</h3>
+            <button type="button" id="btn-close-monthly-progress" class="icon-btn" style="border:none; background:transparent; font-size:24px; line-height:1;">×</button>
+        </div>
+        <div style="max-height:300px; overflow:auto;">
+            <table class="excel-table" style="width:100%; margin-top:0;">
+                <thead>
+                    <tr>
+                        <th class="th-blue sticky-col">Date</th>
+                        <th class="th-blue">New</th>
+                        <th class="th-blue">Rev</th>
+                        <th class="th-blue">Present</th>
+                        <th class="th-blue">Absent</th>
+                        <th class="th-blue">Teacher Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-history-table-body">
+                    <!-- Javascript will inject history here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module" src="student.js"></script>
+</body>
+</html>
